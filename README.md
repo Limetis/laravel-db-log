@@ -3,6 +3,7 @@
 1. Pridat repository do composer.json (type.vcs)
 
 2. Instalace pomoci composer
+
 ```bash
      composer require limetis/laraveldblogger:^0.0.14 
 ```
