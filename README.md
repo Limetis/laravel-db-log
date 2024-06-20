@@ -1,9 +1,15 @@
 ## Instalace
 
-1. Pridat repository do composer.json (type.vcs)
+1. Pridat do composer json:
+
+```json
+        {
+            "type": "vcs",
+            "url": "https://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@github.com/Limetis/laravel-db-log.git"
+        }
+```
 
 2. Instalace pomoci composer
-
 ```bash
      composer require limetis/laraveldblogger:^0.0.14 
 ```
