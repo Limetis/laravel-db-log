@@ -11,7 +11,7 @@
 
 2. Instalace pomoci composer
 ```bash
-     composer require limetis/laraveldblogger:^0.0.14 
+     composer require limetis/laraveldblogger:^0.1.1 
 ```
 
 3. Publikovat migraci
