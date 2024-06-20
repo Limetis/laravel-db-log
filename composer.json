@@ -16,8 +16,8 @@
     ],
     "require": {
         "monolog/monolog": "^3.0",
-        "illuminate/database": "^9.0",
-        "illuminate/support": "^9.0",
+        "illuminate/database": "^10.0",
+        "illuminate/support": "^10.0",
         "spatie/laravel-medialibrary": "^10.15",
         "spatie/laravel-data": "^3.12"
     },
