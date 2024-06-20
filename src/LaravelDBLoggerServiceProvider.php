@@ -1,9 +1,9 @@
 <?php
 
-namespace Limetis\LaravelDBLogger;
+namespace Limetis\laraveldblogger;
 
 use Illuminate\Support\ServiceProvider;
-use Limetis\LaravelDBLogger\Loggers\MariaDbLogger;
+use Limetis\laraveldblogger\Loggers\MariaDbLogger;
 
 class LaravelDBLoggerServiceProvider extends ServiceProvider
 {

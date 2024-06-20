@@ -1,6 +1,6 @@
 <?php
 
-namespace Limetis\LaravelDBLogger\Formaters;
+namespace Limetis\laraveldblogger\Formaters;
 
 use Monolog\Formatter\LineFormatter;
 

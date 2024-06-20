@@ -1,8 +1,8 @@
 <?php
 
-namespace Limetis\LaravelDBLogger\Loggers;
+namespace Limetis\laraveldblogger\Loggers;
 
-use Limetis\LaravelDBLogger\Handlers\MariaDbLoggingHandler;
+use Limetis\laraveldblogger\Handlers\MariaDbLoggingHandler;
 use Monolog\Logger;
 
 class MariaDbLogger

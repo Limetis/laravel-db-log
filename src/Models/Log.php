@@ -1,11 +1,10 @@
 <?php
 
-namespace Limetis\LaravelDBLogger\Models;
+namespace Limetis\laraveldblogger\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 class Log extends Model
 {
@@ -64,7 +63,7 @@ class Log extends Model
 
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = Uuid::uuid4()->toString();
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
         });
 

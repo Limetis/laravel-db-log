@@ -1,6 +1,6 @@
 <?php
 
-namespace Limetis\LaravelDBLogger\Handlers;
+namespace Limetis\laraveldblogger\Handlers;
 
 use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -27,7 +27,7 @@ class MariaDbLoggingHandler extends AbstractProcessingHandler
                   'extra' => $record->extra ?? [],
                 ];
        
-                \Limetis\LaravelDBLogger\Models\Log::query()->create($logData);
+                \Limetis\laraveldblogger\Models\Log::query()->create($logData);
         } else {
             Log::warning('RequestId is not set in context');
         }
