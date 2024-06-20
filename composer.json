@@ -1,12 +1,19 @@
 {
     "name": "limetis/laravel-db-logger",
     "description": "DB logger fo laravel",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Laravel-DB-log\\LaravelDbLog\\": "src/"
+            "Limetis\\LaravelDbLogger\\": "src/"
+        }
+    },
+    "extra":{
+        "laravel": {
+            "providers": [
+                "Limetis\\LaravelDbLogger\\LaravelDBLoggerServiceProvider"
+            ]
         }
     },
     "authors": [
