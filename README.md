@@ -30,7 +30,7 @@
           'maria-db-log' => [
              'driver' => 'custom',
              'handler' => \Limetis\laraveldblogger\Handlers\MariaDbLoggingHandler::class,
-             'via' => \Limetis\laraveldblogger\Handlers\MariaDbLogger::class,
+             'via' => \Limetis\laraveldblogger\Loggers\MariaDbLogger::class,
              'level' => 'debug',
           ],
 ```
