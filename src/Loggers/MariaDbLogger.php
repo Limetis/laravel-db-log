@@ -2,7 +2,7 @@
 
 namespace Limetis\LaravelDBLogger\Loggers;
 
-use App\Logging\Handlers\MariaDbLoggingHandler;
+use Limetis\LaravelDBLogger\Handlers\MariaDbLoggingHandler;
 use Monolog\Logger;
 
 class MariaDbLogger

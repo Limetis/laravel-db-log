@@ -2,7 +2,6 @@
 
 namespace Limetis\LaravelDBLogger\Handlers;
 
-use App\Data\LogData;
 use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
@@ -19,18 +18,16 @@ class MariaDbLoggingHandler extends AbstractProcessingHandler
     {
         if (isset($record->context['requestId'])) {
             $requestId = $record->context['requestId'];
-                $logData = new LogData(
-                    $requestId,
-                    $record->message,
-                    $record->context,
-                    $record->context['payload'] ?? [],
-                    $record->level->name,
-                    $record->channel,
-                    $record->extra ?? [],
-                    null,
-                    null,
-                );
-                \App\Models\Log::query()->create($logData->toArray());
+                $logData = [
+                  'requestId' => $requestId,
+                  'message' => $record->message,
+                  //'payload' => context['payload'] ?? [],
+                  'level' => $record->level->name,
+                  'channel' => $record->channel,
+                  'extra' => $record->extra ?? [],
+                ];
+       
+                \Limetis\LaravelDBLogger\Models\Log::query()->create($logData);
         } else {
             Log::warning('RequestId is not set in context');
         }
