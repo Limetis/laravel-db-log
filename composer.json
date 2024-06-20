@@ -1,7 +1,7 @@
 {
     "name": "limetis/laravel-db-logger",
     "description": "DB logger fo laravel",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -17,8 +17,7 @@
     "require": {
         "monolog/monolog": "^3.0",
         "illuminate/database": "^11.0",
-        "illuminate/support": "^11.0",
-        "spatie/laravel-data": "^3.12"
+        "illuminate/support": "^11.0"
     },
     "minimum-stability": "stable",
     "prefer-stable": true

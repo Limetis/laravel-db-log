@@ -7,28 +7,11 @@ namespace Composer\Autoload;
 class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
 {
     public static $files = array (
-        '88254829cb0eed057c30eaabb6d8edc4' => __DIR__ . '/..' . '/amphp/amp/src/functions.php',
-        '429ae5f14a13a9076791c19422e10996' => __DIR__ . '/..' . '/amphp/amp/src/Future/functions.php',
-        'c8601a4144b50a7b548da082c89c4dc1' => __DIR__ . '/..' . '/amphp/amp/src/Internal/functions.php',
-        '3da389f428d8ee50333e4391c3f45046' => __DIR__ . '/..' . '/amphp/serialization/src/functions.php',
-        'bcb7d4fc55f4b1a7e10f5806723e9892' => __DIR__ . '/..' . '/amphp/sync/src/functions.php',
-        '6c2681bc13923b80242cc286856cab22' => __DIR__ . '/..' . '/amphp/byte-stream/src/functions.php',
-        '4ee21bf8253a2272056aefb41f7f0116' => __DIR__ . '/..' . '/amphp/byte-stream/src/Internal/functions.php',
-        '107d0b55c0ad2d07d8643394552ac029' => __DIR__ . '/..' . '/amphp/process/src/functions.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '445532134d762b3cbc25500cac266092' => __DIR__ . '/..' . '/daverandom/libdns/src/functions.php',
-        '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
-        'f4c761ca07639428acc28ba36643243e' => __DIR__ . '/..' . '/amphp/dns/src/functions.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
-        'd4e415514e4352172d58f02433fa50e4' => __DIR__ . '/..' . '/amphp/socket/src/functions.php',
-        '1c2dcb9d6851a7abaae89f9586ddd460' => __DIR__ . '/..' . '/amphp/socket/src/Internal/functions.php',
-        '7fec264e4908bd2976476a6241c3f4d0' => __DIR__ . '/..' . '/amphp/socket/src/SocketAddress/functions.php',
+        '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
-        '5d92623b88cbe7c988a6aca6fa79ebce' => __DIR__ . '/..' . '/amphp/parallel/src/Context/functions.php',
-        'c20d640a0b06382af5bbe7e0c7475adf' => __DIR__ . '/..' . '/amphp/parallel/src/Context/Internal/functions.php',
-        '42a785d14bae29c606457755ffd1653b' => __DIR__ . '/..' . '/amphp/parallel/src/Ipc/functions.php',
-        '805558626a43dc52f2afc82368f8d62e' => __DIR__ . '/..' . '/amphp/parallel/src/Worker/functions.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
     );
 
@@ -37,35 +20,20 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         array (
             'voku\\' => 5,
         ),
-        'p' => 
-        array (
-            'phpDocumentor\\Reflection\\' => 25,
-        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php83\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Component\\Translation\\' => 30,
-            'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Clock\\' => 24,
-            'Spatie\\StructureDiscoverer\\' => 27,
-            'Spatie\\LaravelPackageTools\\' => 27,
-            'Spatie\\LaravelData\\Database\\Factories\\' => 38,
-            'Spatie\\LaravelData\\' => 19,
-        ),
-        'R' => 
-        array (
-            'Revolt\\' => 7,
         ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
-            'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
-            'PHPStan\\PhpDocParser\\' => 21,
         ),
         'M' => 
         array (
@@ -73,13 +41,7 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         ),
         'L' => 
         array (
-            'LibDNS\\' => 7,
-            'League\\Uri\\' => 11,
             'Laravel-DB-log\\LaravelDbLog\\' => 28,
-        ),
-        'K' => 
-        array (
-            'Kelunik\\Certificate\\' => 20,
         ),
         'I' => 
         array (
@@ -91,7 +53,6 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         'D' => 
         array (
             'Doctrine\\Inflector\\' => 19,
-            'Doctrine\\Deprecations\\' => 22,
         ),
         'C' => 
         array (
@@ -102,32 +63,12 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         array (
             'Brick\\Math\\' => 11,
         ),
-        'A' => 
-        array (
-            'Amp\\WindowsRegistry\\' => 20,
-            'Amp\\Sync\\' => 9,
-            'Amp\\Socket\\' => 11,
-            'Amp\\Serialization\\' => 18,
-            'Amp\\Process\\' => 12,
-            'Amp\\Pipeline\\' => 13,
-            'Amp\\Parser\\' => 11,
-            'Amp\\Parallel\\' => 13,
-            'Amp\\Dns\\' => 8,
-            'Amp\\Cache\\' => 10,
-            'Amp\\ByteStream\\' => 15,
-            'Amp\\' => 4,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'voku\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
-        ),
-        'phpDocumentor\\Reflection\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Symfony\\Polyfill\\Php83\\' => 
         array (
@@ -145,33 +86,9 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\Finder\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/finder',
-        ),
         'Symfony\\Component\\Clock\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/clock',
-        ),
-        'Spatie\\StructureDiscoverer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spatie/php-structure-discoverer/src',
-        ),
-        'Spatie\\LaravelPackageTools\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spatie/laravel-package-tools/src',
-        ),
-        'Spatie\\LaravelData\\Database\\Factories\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spatie/laravel-data/database/factories',
-        ),
-        'Spatie\\LaravelData\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/spatie/laravel-data/src',
-        ),
-        'Revolt\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/revolt/event-loop/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -181,11 +98,6 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
@@ -194,30 +106,13 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         array (
             0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
-        'PHPStan\\PhpDocParser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
-        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'LibDNS\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/daverandom/libdns/src',
-        ),
-        'League\\Uri\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/league/uri',
-            1 => __DIR__ . '/..' . '/league/uri-interfaces',
-        ),
         'Laravel-DB-log\\LaravelDbLog\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
-        ),
-        'Kelunik\\Certificate\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/kelunik/certificate/src',
         ),
         'Illuminate\\Support\\' => 
         array (
@@ -242,10 +137,6 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
         ),
-        'Doctrine\\Deprecations\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
-        ),
         'Carbon\\Doctrine\\' => 
         array (
             0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
@@ -257,54 +148,6 @@ class ComposerStaticInit2c312027beb5aa4513b5829b4b0f73a0
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
-        ),
-        'Amp\\WindowsRegistry\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/windows-registry/src',
-        ),
-        'Amp\\Sync\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/sync/src',
-        ),
-        'Amp\\Socket\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/socket/src',
-        ),
-        'Amp\\Serialization\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/serialization/src',
-        ),
-        'Amp\\Process\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/process/src',
-        ),
-        'Amp\\Pipeline\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/pipeline/src',
-        ),
-        'Amp\\Parser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/parser/src',
-        ),
-        'Amp\\Parallel\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/parallel/src',
-        ),
-        'Amp\\Dns\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/dns/src',
-        ),
-        'Amp\\Cache\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/cache/src',
-        ),
-        'Amp\\ByteStream\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/byte-stream/src',
-        ),
-        'Amp\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/amp/src',
         ),
     );
 
