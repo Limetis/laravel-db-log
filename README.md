@@ -5,7 +5,7 @@
 ```json
         {
             "type": "vcs",
-            "url": "https://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@github.com/Limetis/laravel-db-log.git"
+            "url": "https://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@github.com/Limetis/laravel-db-log.git"
         }
 ```
 
