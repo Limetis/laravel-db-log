@@ -1,18 +1,18 @@
 {
-    "name": "limetis/laravel-db-logger",
+    "name": "limetis/laraveldblogger",
     "description": "DB logger fo laravel",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Limetis\\LaravelDbLogger\\": "src/"
+            "Limetis\\laraveldblogger\\": "src/"
         }
     },
     "extra":{
         "laravel": {
             "providers": [
-                "Limetis\\LaravelDbLogger\\LaravelDBLoggerServiceProvider"
+                "Limetis\\laraveldblogger\\LaravelDBLoggerServiceProvider"
             ]
         }
     },
