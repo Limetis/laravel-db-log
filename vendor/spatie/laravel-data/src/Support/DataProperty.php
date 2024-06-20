@@ -5,7 +5,9 @@ namespace Spatie\LaravelData\Support;
 use Illuminate\Support\Collection;
 use ReflectionAttribute;
 use ReflectionProperty;
-use Spatie\LaravelData\Attributes\WithCast;
+use Spatie\LaravelData\Attributes\Computed;
+use Spatie\LaravelData\Attributes\GetsCast;
+use Spatie\LaravelData\Attributes\Hidden;
 use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Casts\Cast;
@@ -23,6 +25,8 @@ class DataProperty
         public readonly string $className,
         public readonly DataType $type,
         public readonly bool $validate,
+        public readonly bool $computed,
+        public readonly bool $hidden,
         public readonly bool $isPromoted,
         public readonly bool $isReadonly,
         public readonly bool $hasDefaultValue,
@@ -60,16 +64,28 @@ class DataProperty
             default => null,
         };
 
+        $computed = $attributes->contains(
+            fn (object $attribute) => $attribute instanceof Computed
+        );
+
+        $hidden = $attributes->contains(
+            fn (object $attribute) => $attribute instanceof Hidden
+        );
+
         return new self(
             name: $property->name,
             className: $property->class,
             type: DataType::create($property),
-            validate: ! $attributes->contains(fn (object $attribute) => $attribute instanceof WithoutValidation),
+            validate: ! $attributes->contains(
+                fn (object $attribute) => $attribute instanceof WithoutValidation
+            ) && ! $computed,
+            computed: $computed,
+            hidden: $hidden,
             isPromoted: $property->isPromoted(),
             isReadonly: $property->isReadOnly(),
             hasDefaultValue: $property->isPromoted() ? $hasDefaultValue : $property->hasDefaultValue(),
             defaultValue: $property->isPromoted() ? $defaultValue : $property->getDefaultValue(),
-            cast: $attributes->first(fn (object $attribute) => $attribute instanceof WithCast)?->get(),
+            cast: $attributes->first(fn (object $attribute) => $attribute instanceof GetsCast)?->get(),
             transformer: $attributes->first(fn (object $attribute) => $attribute instanceof WithTransformer)?->get(),
             inputMappedName: $inputMappedName,
             outputMappedName: $outputMappedName,

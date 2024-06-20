@@ -13,21 +13,24 @@ use Spatie\LaravelData\DataPipeline;
 use Spatie\LaravelData\DataPipes\AuthorizedDataPipe;
 use Spatie\LaravelData\DataPipes\CastPropertiesDataPipe;
 use Spatie\LaravelData\DataPipes\DefaultValuesDataPipe;
+use Spatie\LaravelData\DataPipes\FillRouteParameterPropertiesDataPipe;
 use Spatie\LaravelData\DataPipes\MapPropertiesDataPipe;
 use Spatie\LaravelData\DataPipes\ValidatePropertiesDataPipe;
 use Spatie\LaravelData\PaginatedDataCollection;
 use Spatie\LaravelData\Resolvers\DataFromSomethingResolver;
 use Spatie\LaravelData\Resolvers\EmptyDataResolver;
+use Spatie\LaravelData\Support\DataConfig;
+use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Wrapping\WrapExecutionType;
 use Spatie\LaravelData\Transformers\DataTransformer;
 
 trait BaseData
 {
-    protected static string $collectionClass = DataCollection::class;
+    protected static string $_collectionClass = DataCollection::class;
 
-    protected static string $paginatedCollectionClass = PaginatedDataCollection::class;
+    protected static string $_paginatedCollectionClass = PaginatedDataCollection::class;
 
-    protected static string $cursorPaginatedCollectionClass = CursorPaginatedDataCollection::class;
+    protected static string $_cursorPaginatedCollectionClass = CursorPaginatedDataCollection::class;
 
     public static function optional(mixed ...$payloads): ?static
     {
@@ -71,22 +74,23 @@ trait BaseData
             ->into(static::class)
             ->through(AuthorizedDataPipe::class)
             ->through(MapPropertiesDataPipe::class)
+            ->through(FillRouteParameterPropertiesDataPipe::class)
             ->through(ValidatePropertiesDataPipe::class)
             ->through(DefaultValuesDataPipe::class)
             ->through(CastPropertiesDataPipe::class);
     }
 
-    public static function collection(Enumerable|array|AbstractPaginator|Paginator|AbstractCursorPaginator|CursorPaginator|DataCollection $items): DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
+    public static function collection(Enumerable|array|AbstractPaginator|Paginator|AbstractCursorPaginator|CursorPaginator|DataCollection|null $items): DataCollection|CursorPaginatedDataCollection|PaginatedDataCollection
     {
         if ($items instanceof Paginator || $items instanceof AbstractPaginator) {
-            return new (static::$paginatedCollectionClass)(static::class, $items);
+            return new (static::$_paginatedCollectionClass)(static::class, $items);
         }
 
         if ($items instanceof AbstractCursorPaginator || $items instanceof CursorPaginator) {
-            return new (static::$cursorPaginatedCollectionClass)(static::class, $items);
+            return new (static::$_cursorPaginatedCollectionClass)(static::class, $items);
         }
 
-        return new (static::$collectionClass)(static::class, $items);
+        return new (static::$_collectionClass)(static::class, $items);
     }
 
     public static function empty(array $extra = []): array
@@ -100,5 +104,22 @@ trait BaseData
         bool $mapPropertyNames = true,
     ): array {
         return DataTransformer::create($transformValues, $wrapExecutionType, $mapPropertyNames)->transform($this);
+    }
+
+    public function getMorphClass(): string
+    {
+        /** @var class-string<\Spatie\LaravelData\Contracts\BaseData> $class */
+        $class = static::class;
+
+        return app(DataConfig::class)->morphMap->getDataClassAlias($class) ?? $class;
+    }
+
+    public function __sleep(): array
+    {
+        return app(DataConfig::class)->getDataClass(static::class)
+            ->properties
+            ->map(fn (DataProperty $property) => $property->name)
+            ->push('_additional')
+            ->toArray();
     }
 }

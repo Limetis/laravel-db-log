@@ -18,15 +18,13 @@ class SongData extends Data
 }
 ```
 
-The `Format` property here is an `Enum` from our [enum package](https://github.com/spatie/enum) and looks like this:
+The `Format` property here is an `Enum` and looks like this:
 
 ```php
-/**
- * @method static self cd()
- * @method static self vinyl()
- * @method static self cassette()
- */
-class Format extends Enum{
+enum Format: string {
+    case cd = 'cd';
+    case vinyl = 'vinyl';
+    case cassette = 'cassette';
 }
 ```
 
@@ -80,7 +78,7 @@ SongData::from([
 It is possible to provide parameters to the casts like this:
 
 ```php
-#[WithCast(EnumCast::class, class: Format::class)]
+#[WithCast(EnumCast::class, type: Format::class)]
 public Format $format
 ```
 
@@ -116,6 +114,8 @@ class SongData extends Data
 }
 ```
 
+Tip: we can also remove the `EnumCast` since the package will automatically cast enums because they're a native PHP type, but this made the example easy to understand.
+
 ## Creating your own casts
 
-It is possible to create your casts. You can read more about this in the [advanced chapter](/docs/laravel-data/v2/advanced-usage/creating-a-cast).
+It is possible to create your casts. You can read more about this in the [advanced chapter](/docs/laravel-data/v3/advanced-usage/creating-a-cast).

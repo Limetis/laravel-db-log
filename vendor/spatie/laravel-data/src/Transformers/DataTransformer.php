@@ -67,33 +67,43 @@ class DataTransformer
 
         $dataClass = $this->config->getDataClass($data::class);
 
-        return $dataClass
-            ->properties
-            ->reduce(function (array $payload, DataProperty $property) use ($data, $trees) {
-                $name = $property->name;
+        $payload = [];
 
-                if (! $this->shouldIncludeProperty($name, $data->{$name}, $trees)) {
-                    return $payload;
-                }
+        $objVars = get_object_vars($data);
 
-                $value = $this->resolvePropertyValue(
-                    $property,
-                    $data->{$name},
-                    $trees->getNested($name),
-                );
+        foreach ($dataClass->properties as $property) {
+            if ($property->hidden) {
+                continue;
+            }
 
-                if ($value instanceof Optional) {
-                    return $payload;
-                }
+            $name = $property->name;
 
-                if ($this->mapPropertyNames && $property->outputMappedName) {
-                    $name = $property->outputMappedName;
-                }
+            if ($property->type->isOptional && ! array_key_exists($name, $objVars)) {
+                continue;
+            }
 
-                $payload[$name] = $value;
+            if (! $this->shouldIncludeProperty($name, $data->{$name}, $trees)) {
+                continue;
+            }
 
-                return $payload;
-            }, []);
+            $value = $this->resolvePropertyValue(
+                $property,
+                $data->{$name},
+                $trees->getNested($name),
+            );
+
+            if ($value instanceof Optional) {
+                continue;
+            }
+
+            if ($this->mapPropertyNames && $property->outputMappedName) {
+                $name = $property->outputMappedName;
+            }
+
+            $payload[$name] = $value;
+        }
+
+        return $payload;
     }
 
     protected function shouldIncludeProperty(

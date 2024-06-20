@@ -3,6 +3,7 @@
 namespace Spatie\LaravelData\Concerns;
 
 use Spatie\LaravelData\Contracts\DataCollectable;
+use Spatie\LaravelData\DataCollection;
 
 /**
  * @template TKey of array-key
@@ -22,7 +23,7 @@ trait EnumerableMethods
     {
         $cloned = clone $this;
 
-        $cloned->items = $cloned->items->map($through);
+        $cloned->items = $cloned->items->map(...func_get_args());
 
         return $cloned;
     }
@@ -34,7 +35,7 @@ trait EnumerableMethods
      */
     public function map(callable $map): static
     {
-        return $this->through($map);
+        return $this->through(...func_get_args());
     }
 
     /**
@@ -46,7 +47,21 @@ trait EnumerableMethods
     {
         $cloned = clone $this;
 
-        $cloned->items = $cloned->items->filter($filter);
+        $cloned->items = $cloned->items->filter(...func_get_args());
+
+        return $cloned;
+    }
+
+    /**
+     * @param callable(TValue): bool $filter
+     *
+     * @return static
+     */
+    public function reject(callable $filter): static
+    {
+        $cloned = clone $this;
+
+        $cloned->items = $cloned->items->reject(...func_get_args());
 
         return $cloned;
     }
@@ -61,7 +76,20 @@ trait EnumerableMethods
      */
     public function first(callable|null $callback = null, $default = null)
     {
-        return $this->items->first($callback, $default);
+        return $this->items->first(...func_get_args());
+    }
+
+    /**
+     * @template            TLastDefault
+     *
+     * @param null|         (callable(TValue,TKey): bool) $callback
+     * @param TLastDefault|(\Closure(): TLastDefault)  $default
+     *
+     * @return TValue|TLastDefault
+     */
+    public function last(callable|null $callback = null, $default = null)
+    {
+        return $this->items->last(...func_get_args());
     }
 
     /**
@@ -71,7 +99,7 @@ trait EnumerableMethods
      */
     public function each(callable $callback): static
     {
-        $this->items->each($callback);
+        $this->items->each(...func_get_args());
 
         return $this;
     }
@@ -92,7 +120,7 @@ trait EnumerableMethods
     {
         $cloned = clone $this;
 
-        $cloned->items = $cloned->items->where($key, $operator, $value);
+        $cloned->items = $cloned->items->where(...func_get_args());
 
         return $cloned;
     }
@@ -108,7 +136,7 @@ trait EnumerableMethods
      */
     public function reduce(callable $callback, mixed $initial = null)
     {
-        return $this->items->reduce($callback, $initial);
+        return $this->items->reduce(...func_get_args());
     }
 
     /**
@@ -124,5 +152,19 @@ trait EnumerableMethods
     public function sole(callable|string|null $key = null, mixed $operator = null, mixed $value = null)
     {
         return $this->items->sole(...func_get_args());
+    }
+
+    /**
+     * @param DataCollection $collection
+     *
+     * @return static
+     */
+    public function merge(DataCollection $collection): static
+    {
+        $cloned = clone $this;
+
+        $cloned->items = $cloned->items->merge($collection->items);
+
+        return $cloned;
     }
 }

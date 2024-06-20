@@ -25,29 +25,35 @@ class PartialsTreeFromRequestResolver
         IncludeableData $data,
         Request $request,
     ): PartialTrees {
-        $requestedIncludesTree = $this->partialsParser->execute(
-            $request->has('include') ? $this->arrayFromRequest($request, 'include') : []
-        );
-        $requestedExcludesTree = $this->partialsParser->execute(
-            $request->has('exclude') ? $this->arrayFromRequest($request, 'exclude') : []
-        );
-        $requestedOnlyTree = $this->partialsParser->execute(
-            $request->has('only') ? $this->arrayFromRequest($request, 'only') : []
-        );
-        $requestedExceptTree = $this->partialsParser->execute(
-            $request->has('except') ? $this->arrayFromRequest($request, 'except') : []
-        );
-
         $dataClass = match (true) {
             $data instanceof BaseData => $data::class,
             $data instanceof BaseDataCollectable => $data->getDataClass(),
             default => throw new TypeError('Invalid type of data')
         };
 
-        $allowedRequestIncludesTree = $this->allowedPartialsParser->execute('allowedRequestIncludes', $this->dataConfig->getDataClass($dataClass));
-        $allowedRequestExcludesTree = $this->allowedPartialsParser->execute('allowedRequestExcludes', $this->dataConfig->getDataClass($dataClass));
-        $allowedRequestOnlyTree = $this->allowedPartialsParser->execute('allowedRequestOnly', $this->dataConfig->getDataClass($dataClass));
-        $allowedRequestExceptTree = $this->allowedPartialsParser->execute('allowedRequestExcept', $this->dataConfig->getDataClass($dataClass));
+        $dataClass = $this->dataConfig->getDataClass($dataClass);
+
+        $requestedIncludesTree = $this->partialsParser->execute(
+            $request->has('include') ? $this->arrayFromRequest($request, 'include') : [],
+            $dataClass->outputNameMapping
+        );
+        $requestedExcludesTree = $this->partialsParser->execute(
+            $request->has('exclude') ? $this->arrayFromRequest($request, 'exclude') : [],
+            $dataClass->outputNameMapping
+        );
+        $requestedOnlyTree = $this->partialsParser->execute(
+            $request->has('only') ? $this->arrayFromRequest($request, 'only') : [],
+            $dataClass->outputNameMapping
+        );
+        $requestedExceptTree = $this->partialsParser->execute(
+            $request->has('except') ? $this->arrayFromRequest($request, 'except') : [],
+            $dataClass->outputNameMapping
+        );
+
+        $allowedRequestIncludesTree = $this->allowedPartialsParser->execute('allowedRequestIncludes', $dataClass);
+        $allowedRequestExcludesTree = $this->allowedPartialsParser->execute('allowedRequestExcludes', $dataClass);
+        $allowedRequestOnlyTree = $this->allowedPartialsParser->execute('allowedRequestOnly', $dataClass);
+        $allowedRequestExceptTree = $this->allowedPartialsParser->execute('allowedRequestExcept', $dataClass);
 
         $partialTrees = $data->getPartialTrees();
 
@@ -59,7 +65,7 @@ class PartialsTreeFromRequestResolver
         );
     }
 
-    private function arrayFromRequest(Request $request, string $key): array
+    protected function arrayFromRequest(Request $request, string $key): array
     {
         $value = $request->get($key);
 

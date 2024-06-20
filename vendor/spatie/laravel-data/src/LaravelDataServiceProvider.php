@@ -3,7 +3,9 @@
 namespace Spatie\LaravelData;
 
 use Spatie\LaravelData\Commands\DataMakeCommand;
+use Spatie\LaravelData\Commands\DataStructuresCacheCommand;
 use Spatie\LaravelData\Contracts\BaseData;
+use Spatie\LaravelData\Support\Caching\DataStructureCache;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\VarDumper\VarDumperManager;
 use Spatie\LaravelPackageTools\Package;
@@ -16,15 +18,28 @@ class LaravelDataServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-data')
             ->hasCommand(DataMakeCommand::class)
+            ->hasCommand(DataStructuresCacheCommand::class)
             ->hasConfigFile('data');
     }
 
-    public function packageRegistered()
+    public function packageRegistered(): void
     {
-        $this->app->singleton(
-            DataConfig::class,
-            fn () => new DataConfig(config('data'))
-        );
+        if (config('data.structure_caching.enabled')) {
+            $this->app->singleton(
+                DataStructureCache::class,
+                fn () => new DataStructureCache(config('data.structure_caching.cache'))
+            );
+
+            $this->app->singleton(
+                DataConfig::class,
+                fn () => $this->app->make(DataStructureCache::class)->getConfig() ?? new DataConfig(config('data'))
+            );
+        } else {
+            $this->app->singleton(
+                DataConfig::class,
+                fn () => new DataConfig(config('data'))
+            );
+        }
 
         /** @psalm-suppress UndefinedInterfaceMethod */
         $this->app->beforeResolving(BaseData::class, function ($class, $parameters, $app) {
@@ -39,7 +54,7 @@ class LaravelDataServiceProvider extends PackageServiceProvider
         });
     }
 
-    public function packageBooted()
+    public function packageBooted(): void
     {
         $enableVarDumperCaster = match (config('data.var_dumper_caster_mode')) {
             'enabled' => true,

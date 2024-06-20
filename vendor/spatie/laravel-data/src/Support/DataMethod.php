@@ -45,13 +45,20 @@ class DataMethod
             return null;
         }
 
-        $parameters = collect($method->getParameters())->map(function (ReflectionParameter $parameter) use ($properties) {
-            if ($parameter->isPromoted()) {
-                return $properties->get($parameter->name);
-            }
+        $parameters = collect($method->getParameters())
+            ->map(function (ReflectionParameter $parameter) use ($properties) {
+                if (! $parameter->isPromoted()) {
+                    return DataParameter::create($parameter);
+                }
 
-            return DataParameter::create($parameter);
-        });
+                if ($properties->has($parameter->name)) {
+                    return $properties->get($parameter->name);
+                }
+
+                return null;
+            })
+            ->filter()
+            ->values();
 
         return new self(
             '__construct',

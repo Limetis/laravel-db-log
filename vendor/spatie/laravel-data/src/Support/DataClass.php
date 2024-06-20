@@ -17,6 +17,7 @@ use Spatie\LaravelData\Contracts\ValidateableData;
 use Spatie\LaravelData\Contracts\WrappableData;
 use Spatie\LaravelData\Mappers\ProvidedNameMapper;
 use Spatie\LaravelData\Resolvers\NameMappersResolver;
+use Spatie\LaravelData\Support\NameMapping\DataClassNameMapping;
 
 /**
  * @property  class-string<DataObject> $name
@@ -32,6 +33,7 @@ class DataClass
         public readonly Collection $methods,
         public readonly ?DataMethod $constructorMethod,
         public readonly bool $isReadonly,
+        public readonly bool $isAbstract,
         public readonly bool $appendable,
         public readonly bool $includeable,
         public readonly bool $responsable,
@@ -39,14 +41,13 @@ class DataClass
         public readonly bool $validateable,
         public readonly bool $wrappable,
         public readonly Collection $attributes,
+        public readonly DataClassNameMapping $outputNameMapping,
     ) {
     }
 
     public static function create(ReflectionClass $class): self
     {
-        $attributes = collect($class->getAttributes())
-            ->filter(fn (ReflectionAttribute $reflectionAttribute) => class_exists($reflectionAttribute->getName()))
-            ->map(fn (ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance());
+        $attributes = static::resolveAttributes($class);
 
         $methods = collect($class->getMethods());
 
@@ -64,14 +65,32 @@ class DataClass
             methods: self::resolveMethods($class),
             constructorMethod: DataMethod::createConstructor($constructor, $properties),
             isReadonly: method_exists($class, 'isReadOnly') && $class->isReadOnly(),
+            isAbstract: $class->isAbstract(),
             appendable: $class->implementsInterface(AppendableData::class),
             includeable: $class->implementsInterface(IncludeableData::class),
             responsable: $class->implementsInterface(ResponsableData::class),
             transformable: $class->implementsInterface(TransformableData::class),
             validateable: $class->implementsInterface(ValidateableData::class),
             wrappable: $class->implementsInterface(WrappableData::class),
-            attributes:  $attributes,
+            attributes: $attributes,
+            outputNameMapping: self::resolveOutputNameMapping($properties),
         );
+    }
+
+    protected static function resolveAttributes(
+        ReflectionClass $class
+    ): Collection {
+        $attributes = collect($class->getAttributes())
+            ->filter(fn (ReflectionAttribute $reflectionAttribute) => class_exists($reflectionAttribute->getName()))
+            ->map(fn (ReflectionAttribute $reflectionAttribute) => $reflectionAttribute->newInstance());
+
+        $parent = $class->getParentClass();
+
+        if ($parent !== false) {
+            $attributes = $attributes->merge(static::resolveAttributes($parent));
+        }
+
+        return $attributes;
     }
 
     protected static function resolveMethods(
@@ -123,6 +142,30 @@ class DataClass
         return array_merge(
             $class->getDefaultProperties(),
             $values
+        );
+    }
+
+    protected static function resolveOutputNameMapping(
+        Collection $properties,
+    ): DataClassNameMapping {
+        $mapped = [];
+        $mappedDataObjects = [];
+
+        $properties->each(function (DataProperty $dataProperty) use (&$mapped, &$mappedDataObjects) {
+            if ($dataProperty->type->isDataObject || $dataProperty->type->isDataCollectable) {
+                $mappedDataObjects[$dataProperty->name] = $dataProperty->type->dataClass;
+            }
+
+            if ($dataProperty->outputMappedName === null) {
+                return;
+            }
+
+            $mapped[$dataProperty->outputMappedName] = $dataProperty->name;
+        });
+
+        return new DataClassNameMapping(
+            $mapped,
+            $mappedDataObjects
         );
     }
 }

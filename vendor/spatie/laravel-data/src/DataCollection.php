@@ -13,6 +13,7 @@ use Spatie\LaravelData\Concerns\TransformableData;
 use Spatie\LaravelData\Concerns\WrappableData;
 use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Contracts\DataCollectable;
+use Spatie\LaravelData\Contracts\IncludeableData as IncludeableDataContract;
 use Spatie\LaravelData\Exceptions\CannotCastData;
 use Spatie\LaravelData\Exceptions\InvalidDataCollectionOperation;
 use Spatie\LaravelData\Support\EloquentCasts\DataCollectionEloquentCast;
@@ -45,9 +46,9 @@ class DataCollection implements DataCollectable, ArrayAccess
      */
     public function __construct(
         public readonly string $dataClass,
-        Enumerable|array|DataCollection $items
+        Enumerable|array|DataCollection|null $items
     ) {
-        if (is_array($items)) {
+        if (is_array($items) || is_null($items)) {
             $items = new Collection($items);
         }
 
@@ -101,7 +102,13 @@ class DataCollection implements DataCollectable, ArrayAccess
             throw InvalidDataCollectionOperation::create();
         }
 
-        return $this->items->offsetGet($offset);
+        $data = $this->items->offsetGet($offset);
+
+        if($data instanceof IncludeableDataContract) {
+            $data->withPartialTrees($this->getPartialTrees());
+        }
+
+        return $data;
     }
 
     /**
@@ -139,10 +146,10 @@ class DataCollection implements DataCollectable, ArrayAccess
 
     public static function castUsing(array $arguments)
     {
-        if (count($arguments) !== 1) {
+        if (count($arguments) < 1) {
             throw CannotCastData::dataCollectionTypeRequired();
         }
 
-        return new DataCollectionEloquentCast(current($arguments), static::class);
+        return new DataCollectionEloquentCast($arguments[0], static::class, array_slice($arguments, 1));
     }
 }

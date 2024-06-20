@@ -5,7 +5,6 @@ namespace Spatie\LaravelData\Resolvers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseData;
-use Spatie\LaravelData\Normalizers\ArrayableNormalizer;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataMethod;
 
@@ -39,20 +38,15 @@ class DataFromSomethingResolver
             return $data;
         }
 
-        $properties = array_reduce(
-            $payloads,
-            function (Collection $carry, mixed $payload) use ($class) {
-                /** @var BaseData $class */
-                $pipeline = $class::pipeline();
+        $properties = new Collection();
 
-                foreach ($class::normalizers() as $normalizer) {
-                    $pipeline->normalizer($normalizer);
-                }
+        $pipeline = $this->dataConfig->getResolvedDataPipeline($class);
 
-                return $carry->merge($pipeline->using($payload)->execute());
-            },
-            collect(),
-        );
+        foreach ($payloads as $payload) {
+            foreach ($pipeline->execute($payload) as $key => $value) {
+                $properties[$key] = $value;
+            }
+        }
 
         return $this->dataFromArrayResolver->execute($class, $properties);
     }
@@ -69,7 +63,7 @@ class DataFromSomethingResolver
             ->methods
             ->filter(
                 fn (DataMethod $method) => $method->isCustomCreationMethod
-                && ! in_array($method->name, $this->ignoredMagicalMethods)
+                    && ! in_array($method->name, $this->ignoredMagicalMethods)
             );
 
         $methodName = null;
@@ -86,13 +80,11 @@ class DataFromSomethingResolver
             return null;
         }
 
+        $pipeline = $this->dataConfig->getResolvedDataPipeline($class);
+
         foreach ($payloads as $payload) {
             if ($payload instanceof Request) {
-                $class::pipeline()
-                    ->normalizer(ArrayableNormalizer::class)
-                    ->into($class)
-                    ->using($payload)
-                    ->execute();
+                $pipeline->execute($payload);
             }
         }
 

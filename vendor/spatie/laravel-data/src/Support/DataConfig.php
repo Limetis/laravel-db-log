@@ -4,6 +4,7 @@ namespace Spatie\LaravelData\Support;
 
 use ReflectionClass;
 use Spatie\LaravelData\Casts\Cast;
+use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Transformers\Transformer;
 
 class DataConfig
@@ -17,8 +18,13 @@ class DataConfig
     /** @var array<string, \Spatie\LaravelData\Casts\Cast> */
     protected array $casts = [];
 
+    /** @var array<string, \Spatie\LaravelData\Support\ResolvedDataPipeline> */
+    protected array $resolvedDataPipelines = [];
+
     /** @var \Spatie\LaravelData\RuleInferrers\RuleInferrer[] */
     protected array $ruleInferrers;
+
+    public readonly DataClassMorphMap $morphMap;
 
     public function __construct(array $config)
     {
@@ -34,6 +40,8 @@ class DataConfig
         foreach ($config['casts'] ?? [] as $castable => $cast) {
             $this->casts[ltrim($castable, ' \\')] = app($cast);
         }
+
+        $this->morphMap = new DataClassMorphMap();
     }
 
     public function getDataClass(string $class): DataClass
@@ -43,6 +51,15 @@ class DataConfig
         }
 
         return $this->dataClasses[$class] = DataClass::create(new ReflectionClass($class));
+    }
+
+    public function getResolvedDataPipeline(string $class): ResolvedDataPipeline
+    {
+        if (array_key_exists($class, $this->resolvedDataPipelines)) {
+            return $this->resolvedDataPipelines[$class];
+        }
+
+        return $this->resolvedDataPipelines[$class] = $class::pipeline()->resolve();
     }
 
     public function findGlobalCastForProperty(DataProperty $property): ?Cast
@@ -80,5 +97,21 @@ class DataConfig
     public function getRuleInferrers(): array
     {
         return $this->ruleInferrers;
+    }
+
+    /**
+     * @param array<string, class-string<BaseData>> $map
+     */
+    public function enforceMorphMap(array $map): void
+    {
+        $this->morphMap->merge($map);
+    }
+
+    public function reset(): self
+    {
+        $this->dataClasses = [];
+        $this->resolvedDataPipelines = [];
+
+        return $this;
     }
 }

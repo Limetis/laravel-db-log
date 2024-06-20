@@ -6,6 +6,8 @@ use ArgumentCountError;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
+use Spatie\LaravelData\Exceptions\CannotSetComputedValue;
+use Spatie\LaravelData\Optional;
 use Spatie\LaravelData\Support\DataClass;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataParameter;
@@ -39,13 +41,30 @@ class DataFromArrayResolver
 
         $dataClass
             ->properties
-            ->filter(
-                fn (DataProperty $property) =>
-                    ! $property->isPromoted &&
-                    ! $property->isReadonly &&
-                    $properties->has($property->name)
+            ->reject(
+                fn (DataProperty $property) => $property->isPromoted
+                    || $property->isReadonly
+                    || ! $properties->has($property->name)
             )
             ->each(function (DataProperty $property) use ($properties, $data) {
+                if ($property->type->isOptional
+                    && isset($data->{$property->name})
+                    && $properties->get($property->name) instanceof Optional
+                ) {
+                    return;
+                }
+
+                if ($property->computed
+                    && $property->type->isNullable
+                    && $properties->get($property->name) === null
+                ) {
+                    return; // Nullable properties get assigned null by default
+                }
+
+                if ($property->computed) {
+                    throw CannotSetComputedValue::create($property);
+                }
+
                 $data->{$property->name} = $properties->get($property->name);
             });
 

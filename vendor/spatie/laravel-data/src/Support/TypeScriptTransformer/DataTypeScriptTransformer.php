@@ -17,6 +17,7 @@ use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Enums\DataCollectableType;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataProperty;
+use Spatie\LaravelData\Support\Lazy\ClosureLazy;
 use Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\Attributes\Optional as TypeScriptOptional;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
@@ -70,7 +71,7 @@ class DataTypeScriptTransformer extends DtoTransformer
                     || $dataProperty->attributes->contains(
                         fn (object $attribute) => $attribute instanceof TypeScriptOptional
                     )
-                    || $dataProperty->type->isLazy
+                    || ($dataProperty->type->lazyType && $dataProperty->type->lazyType !== ClosureLazy::class)
                     || $dataProperty->type->isOptional;
 
                 $transformed = $this->typeToTypeScript(
@@ -80,6 +81,10 @@ class DataTypeScriptTransformer extends DtoTransformer
                 );
 
                 $propertyName = $dataProperty->outputMappedName ?? $dataProperty->name;
+
+                if (! preg_match('/^[$_a-zA-Z][$_a-zA-Z0-9]*$/', $propertyName)) {
+                    $propertyName = "'{$propertyName}'";
+                }
 
                 return $isOptional
                     ? "{$carry}{$propertyName}?: {$transformed};" . PHP_EOL

@@ -2,6 +2,177 @@
 
 All notable changes to `laravel-data` will be documented in this file.
 
+## 3.11.0 - 2023-12-21
+
+- Add support for data structure caching #622
+
+## 3.10.1 - 2023-12-04
+
+- Make ValidationPath Stringable
+- Fix PHPStan
+- Improve performance when optional peoperty exists (#612)
+
+## 3.10.0 - 2023-12-01
+
+A fresh release after a month of vacation, enjoy!
+
+- Add ExcludeWith validation rule (#584)
+- Add DoesntEndWith and DoesntStartWith validation rules (#585)
+- Add MinDigits and MaxDigits validation rules (#586)
+- Add DataCollection reject() method (#593)
+- Add generic type for WithData trait (#597)
+- Fix issue where non set optional values were transformed (#602)
+- Fix issue where parameters passed to Laravel Collection methods would sometimes provide alternative results (issue: #607)
+
+## 1.5.3 - 2023-12-01
+
+- MimeTypes validation fix on v1 (#596)
+
+## 3.9.2 - 2023-10-20
+
+- Fix breaking compatibility #590
+
+## 3.9.1 - 2023-10-12
+
+- Add Declined and DeclinedIf validation attributes (#572)
+- Add MacAddress validation attribute (#573)
+- Add RequiredArrayKeys validation attribute (#574)
+- Support Arrayable when casting to DataCollection (#577)
+- Fetch attributes from parent classes to allow reusability (#581)
+- Fix issue where non-set optional values would be transformed
+
+## 3.9.0 - 2023-09-15
+
+- Fix an issue where computed values could not be set as null
+- Fix for no rules created on optional|nullable Data object and Collection (#532)
+- Add `CustomValidationAttribute`'s
+- Copy partial trees when using array access on a collection
+
+## 3.8.1 - 2023-08-11
+
+- fix abstract json cast format
+
+## 3.8.0 - 2023-08-09
+
+- Add Hidden Attribute (#505)
+- Add Null value support for RequiredUnless Validation (#525)
+- Add abstract eloquent casts (#526)
+
+## 3.7.1 - 2023-08-04
+
+- fix target namespace when creating files with Laravel Idea (#497)
+- allow collection to be created passing null (#507)
+- add Ulid validation rule (#510)
+  -add TARGET_PARAMETER to Attribute for improved Validation (#523)
+
+## 3.7.0 - 2023-07-05
+
+- Add support for better exception messages when parameters are missing
+- Fix default properties generating validation rules when not provided
+- Add last() method on DataCollection (#486)
+- Add new manual written present attribute rule always overwrites a generated required rule
+- Added the ability to create data files, casts, transformers and rules using Laravel Idea plugin #485
+
+## 3.6.0 - 2023-06-02
+
+- Add some config options to the `make:data` command (#449, #335)
+
+## 1.5.2 - 2023-05-31
+
+- Add laravel v10 support
+
+## 3.5.1 - 2023-05-12
+
+- Add ability to instantiate an eloquent cast when null value using null database values (#425)
+- Revert only use validated data (https://github.com/spatie/laravel-data/pull/438) -> see #432
+
+## 3.5.0 - 2023-05-05
+
+- Add support for computed values
+- Add merge method to Data Collections (#419)
+- Allow field references in same validation attribute
+- Generic return type of toResponse function (#437)
+- Only use validated data (#438)
+- Add missing constructor parameters to error message (#433)
+
+## 3.4.4 - 2023-04-14
+
+- Make Lazy Macroable
+
+## 3.4.3 - 2023-04-12
+
+- Update TypeScript Transformer with new closure lazy type
+
+## 3.4.2 - 2023-04-12
+
+- Add support for Lazy Closures which can be used with inertia
+
+## 3.4.1 - 2023-04-07
+
+- reverted the reverted #393 branch
+
+## 3.4.0 - 2023-04-07
+
+- Allow to fetch Lazy data properties in unified way (#403)
+
+## 3.3.3 - 2023-04-03
+
+- revert: Fix usage of properties' mapped output names in 'only', 'except', 'includes', and 'excludes' operations (https://github.com/spatie/laravel-data/pull/393)
+
+## 3.2.2 - 2023-03-30
+
+- Fix issue when validating and creating a data object was impossible to use magic creation methods
+- Fix usage of properties' mapped output names in 'only', 'except', 'includes', and 'excludes' operations (#393)
+- Add some extra documentation
+
+## 3.2.1 - 2023-03-24
+
+- Introduce FormRequestNormalizer (#380)
+- Add support for models without all columns (#385)
+
+## 3.2.0 - 2023-03-17
+
+- Add benchmarks for testing data performance
+- Add some performance improvements for data creation and transformation
+
+## 3.1.3 - 2023-03-16
+
+- Performance improvements
+
+## 3.1.2 - 2023-03-10
+
+- Fix issue where promoted protected constructor parameters were seen as possible property canidates
+- Allow using closures within the with method (#372)
+- Add support for Validation Rule Contract in Rule rule (#362)
+- Allow laravel-data validation rules to be used in Laravel validator (#375)
+
+## 3.1.1 - 2023-03-02
+
+- Add WithCastable attribute (#349)
+- Quote non-standard object keys when transforming to Typescript (#367)
+
+## 3.1.0 - 2023-02-10
+
+- Allow filling props from route parameters (#341)
+- Better handing of custom regex validation rules(#342)
+- Fix types (#348)
+- Improve validation when strings are passed for nested data objects
+- Add FieldReference to Before and After Validation attribute (#345)
+
+## 3.0.0 - 2023-02-01
+
+- The validation logic is completely rewritten
+- Add support for nested nullable and optional data objects
+- Allow referencing other fields in validation attributes when the data is nested
+- Allow referencing url parameters (and even model properties) in validation attributes
+- Allow circular dependencies when validating data
+- Add support for nested validation messages and attributes
+- Package specific properties are renamed to avoid conflicts
+- Serialization logic updated to only serialize your properties
+- Prevent fatal error when passing a string containing only an integer to JSON Normalizer (#322)
+- Ignore leading ! in DateTimeInterfaceTransformer (#325)
+- Extend the make:data command to be more flexible (#335)
+
 ## 2.2.3 - 2023-01-24
 
 - Add Laravel 10.x support (#331)

@@ -46,7 +46,7 @@ SongData::from(Song::firstOrFail($id));
 Data can also be created from JSON strings:
 
 ```php
-SongData::from('{"name" : "Never Gonna Give You Up","artist" : "Rick Astley"}');
+SongData::from('{"title" : "Never Gonna Give You Up","artist" : "Rick Astley"}');
 ```
 
 The package will find the required properties within the model and use them to construct the data object.
@@ -97,7 +97,7 @@ class ContractData extends Data
 }
 ```
 
-You can also use the `MapName` attribute when you want to combine input (see [transforming data objects](https://spatie.be/docs/laravel-data/v2/as-a-resource/from-data-to-resource#mapping-property-names)) and output property name mapping:
+You can also use the `MapName` attribute when you want to combine input (see [transforming data objects](https://spatie.be/docs/laravel-data/v3/as-a-resource/from-data-to-resource#mapping-property-names)) and output property name mapping:
 
 ```php
 #[MapName(SnakeCaseMapper::class)]
@@ -209,7 +209,7 @@ will try to create itself from the following types:
 - An *Arrayable* by calling `toArray` on it
 - An *array*
 
-This list can be extended using extra normalizers, find more about it [here](https://spatie.be/docs/laravel-data/v2/advanced-usage/normalizers).
+This list can be extended using extra normalizers, find more about it [here](https://spatie.be/docs/laravel-data/v3/advanced-usage/normalizers).
 
 When a data object cannot be created using magical methods or the default methods, a `CannotCreateData`
 exception will be thrown.
@@ -236,7 +236,7 @@ SongData::withoutMagicalCreationFrom($song);
 
 ## Advanced creation
 
-Internally this package is using a pipeline to create a data object from something. This pipeline exists of steps which transform properties into a correct structure and it can be completely customized. You can read more about it [here](/docs/laravel-data/v2/advanced-usage/pipeline).
+Internally this package is using a pipeline to create a data object from something. This pipeline exists of steps which transform properties into a correct structure and it can be completely customized. You can read more about it [here](/docs/laravel-data/v3/advanced-usage/pipeline).
 
 ## Quickly getting data from Models, Requests, ...
 
@@ -263,7 +263,7 @@ Song::firstOrFail($id)->getData(); // A SongData object
 We can do the same with a FormRequest, we don't use a property here to define the data class but use a method instead:
 
 ```php
-class SongRequest extends Request
+class SongRequest extends FormRequest
 {
     use WithData;
     
@@ -283,7 +283,7 @@ class SongController
     {
         $data = $request->getData();
     
-        $song = Song::create($data);
+        $song = Song::create($data->toArray());
         
         return $data;
     }
