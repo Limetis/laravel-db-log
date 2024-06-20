@@ -5,38 +5,26 @@ namespace Spatie\LaravelData\Attributes\Validation;
 use Attribute;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rules\In as BaseIn;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
-use Spatie\LaravelData\Support\Validation\ValidationPath;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class In extends ObjectValidationAttribute
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class In extends ValidationAttribute
 {
-    protected ?BaseIn $rule = null;
+    protected BaseIn $rule;
 
-    private array $values;
+    public function __construct(array|string|BaseIn ...$values)
+    {
+        if (count($values) === 1 && $values[0] instanceof BaseIn) {
+            $this->rule = $values[0];
 
-    public function __construct(
-        array|string|BaseIn|RouteParameterReference ...$values
-    ) {
-        $this->values = $values;
+            return;
+        }
+
+        $this->rule = new BaseIn(Arr::flatten($values));
     }
 
-    public function getRule(ValidationPath $path): object|string
+    public function getRules(): array
     {
-        if ($this->rule) {
-            return $this->rule;
-        }
-
-        if (count($this->values) === 1 && $this->values[0] instanceof BaseIn) {
-            return $this->rule = $this->values[0];
-        }
-
-        $this->values = array_map(
-            fn (string|RouteParameterReference $value) => $this->normalizePossibleRouteReferenceParameter($value),
-            Arr::flatten($this->values)
-        );
-
-        return  $this->rule = new BaseIn($this->values);
+        return [$this->rule];
     }
 
     public static function keyword(): string

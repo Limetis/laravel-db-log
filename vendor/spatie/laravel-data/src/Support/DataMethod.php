@@ -3,10 +3,11 @@
 namespace Spatie\LaravelData\Support;
 
 use Illuminate\Support\Collection;
-use Spatie\LaravelData\Enums\CustomCreationMethodType;
+use ReflectionMethod;
+use ReflectionParameter;
 
 /**
- * @property Collection<DataParameter|DataProperty> $parameters
+ * @property Collection<DataParameter> $parameters
  */
 class DataMethod
 {
@@ -15,38 +16,64 @@ class DataMethod
         public readonly Collection $parameters,
         public readonly bool $isStatic,
         public readonly bool $isPublic,
-        public readonly CustomCreationMethodType $customCreationMethodType,
-        public readonly ?DataType $returnType,
+        public readonly bool $isCustomCreationMethod,
     ) {
+    }
+
+    public static function create(ReflectionMethod $method): self
+    {
+        $isCustomCreationMethod = $method->isStatic()
+            && $method->isPublic()
+            && str_starts_with($method->getName(), 'from')
+            && $method->name !== 'from'
+            && $method->name !== 'optional';
+
+        return new self(
+            $method->name,
+            collect($method->getParameters())->map(
+                fn (ReflectionParameter $parameter) => DataParameter::create($parameter),
+            ),
+            $method->isStatic(),
+            $method->isPublic(),
+            $isCustomCreationMethod
+        );
+    }
+
+    public static function createConstructor(?ReflectionMethod $method, Collection $properties): ?self
+    {
+        if ($method === null) {
+            return null;
+        }
+
+        $parameters = collect($method->getParameters())->map(function (ReflectionParameter $parameter) use ($properties) {
+            if ($parameter->isPromoted()) {
+                return $properties->get($parameter->name);
+            }
+
+            return DataParameter::create($parameter);
+        });
+
+        return new self(
+            '__construct',
+            $parameters,
+            false,
+            $method->isPublic(),
+            false
+        );
     }
 
     public function accepts(mixed ...$input): bool
     {
-        $requiredParameterCount = 0;
+        /** @var Collection<\Spatie\LaravelData\Support\DataParameter|\Spatie\LaravelData\Support\DataProperty> $parameters */
+        $parameters = array_is_list($input)
+            ? $this->parameters
+            : $this->parameters->mapWithKeys(fn (DataParameter|DataProperty $parameter) => [$parameter->name => $parameter]);
 
-        foreach ($this->parameters as $parameter) {
-            if ($parameter->type->type->isCreationContext()) {
-                continue;
-            }
-
-            $requiredParameterCount++;
-        }
-
-        if (count($input) > $requiredParameterCount) {
+        if (count($input) > $parameters->count()) {
             return false;
         }
 
-        $useNameAsIndex = ! array_is_list($input);
-
-        foreach ($this->parameters as $index => $parameter) {
-            if ($parameter->type->type->isCreationContext()) {
-                continue;
-            }
-
-            if ($useNameAsIndex) {
-                $index = $parameter->name;
-            }
-
+        foreach ($parameters as $index => $parameter) {
             $parameterProvided = array_key_exists($index, $input);
 
             if (! $parameterProvided && $parameter->hasDefaultValue === false) {
@@ -57,27 +84,11 @@ class DataMethod
                 continue;
             }
 
-            if (
-                $parameter instanceof DataProperty
-                && ! $parameter->type->acceptsValue($input[$index])
-            ) {
+            if (! $parameter->type->acceptsValue($input[$index])) {
                 return false;
             }
-
-            if (
-                $parameter instanceof DataParameter
-                && ! $parameter->type->acceptsValue($input[$index])
-            ) {
-                return false;
-            }
-
         }
 
         return true;
-    }
-
-    public function returns(string $type): bool
-    {
-        return $this->returnType?->acceptsType($type) ?? false;
     }
 }

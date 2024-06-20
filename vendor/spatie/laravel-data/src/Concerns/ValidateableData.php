@@ -3,15 +3,13 @@
 namespace Spatie\LaravelData\Concerns;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Validator;
-use Spatie\LaravelData\Resolvers\DataValidationRulesResolver;
-use Spatie\LaravelData\Support\DataContainer;
-use Spatie\LaravelData\Support\Validation\DataRules;
-use Spatie\LaravelData\Support\Validation\ValidationContext;
-use Spatie\LaravelData\Support\Validation\ValidationPath;
+use Spatie\LaravelData\Resolvers\DataClassValidationRulesResolver;
+use Spatie\LaravelData\Resolvers\DataValidatorResolver;
 
 /**
- * @method static array rules(ValidationContext $context)
+ * @method static array rules(...$args)
  * @method static array messages(...$args)
  * @method static array attributes(...$args)
  * @method static bool stopOnFirstFailure()
@@ -21,22 +19,34 @@ use Spatie\LaravelData\Support\Validation\ValidationPath;
  */
 trait ValidateableData
 {
-    public static function validate(Arrayable|array $payload): Arrayable|array
+    public static function validate(Arrayable | array $payload): Arrayable | array
     {
-        $validator = DataContainer::get()->dataValidatorResolver()->execute(
-            static::class,
-            $payload,
-        );
+        $validator = app(DataValidatorResolver::class)->execute(static::class, $payload);
 
-        return DataContainer::get()->validatedPayloadResolver()->execute(
-            static::class,
-            $validator,
-        );
+        try {
+            $validator->validate();
+        } catch (ValidationException $exception) {
+            if (method_exists(static::class, 'redirect')) {
+                $exception->redirectTo(app()->call([static::class, 'redirect']));
+            }
+
+            if (method_exists(static::class, 'redirectRoute')) {
+                $exception->redirectTo(route(app()->call([static::class, 'redirectRoute'])));
+            }
+
+            if (method_exists(static::class, 'errorBag')) {
+                $exception->errorBag(app()->call([static::class, 'errorBag']));
+            }
+
+            throw $exception;
+        }
+
+        return $validator->validated();
     }
 
-    public static function validateAndCreate(Arrayable|array $payload): static
+    public static function validateAndCreate(Arrayable | array $payload): static
     {
-        return static::factory()->alwaysValidate()->from($payload);
+        return static::from(static::validate($payload));
     }
 
     public static function withValidator(Validator $validator): void
@@ -44,13 +54,18 @@ trait ValidateableData
         return;
     }
 
-    public static function getValidationRules(array $payload): array
-    {
-        return app(DataValidationRulesResolver::class)->execute(
-            static::class,
-            $payload,
-            ValidationPath::create(),
-            DataRules::create(),
-        );
+    public static function getValidationRules(
+        array $fields = [],
+        array $payload = []
+    ): array {
+        $rules = app(DataClassValidationRulesResolver::class)
+            ->execute(static::class, $payload)
+            ->toArray();
+
+        if (count($fields) === 0) {
+            return $rules;
+        }
+
+        return array_filter($rules, fn (string $key): bool => in_array($key, $fields, true), ARRAY_FILTER_USE_KEY);
     }
 }

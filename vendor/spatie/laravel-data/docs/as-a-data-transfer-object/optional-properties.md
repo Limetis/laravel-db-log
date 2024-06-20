@@ -1,13 +1,11 @@
 ---
 title: Optional properties
-weight: 5
+weight: 2
 ---
 
 Sometimes you have a data object with properties which shouldn't always be set, for example in a partial API update where you only want to update certain fields. In this case you can make a property `Optional` as such:
 
 ```php
-use Spatie\LaravelData\Optional;
-
 class SongData extends Data
 {
     public function __construct(
@@ -45,8 +43,7 @@ class SongData extends Data
     ) {
     }
     
-    public static function fromTitle(string $title): static
-    {
+    public static function fromTitle(string $title): static{
         return new self($title, Optional::create());
     }
 }

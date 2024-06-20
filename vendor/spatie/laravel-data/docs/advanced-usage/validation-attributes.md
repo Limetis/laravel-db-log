@@ -1,1012 +1,892 @@
 ---
 title: Validation attributes
-weight: 14
+weight: 12
 ---
 
-These are all the validation attributes currently available in laravel-data.
+It is possible to validate the request before a data object is constructed. This can be done by adding validation attributes to the properties of a data object like this:
 
-## Accepted
+```php
+class SongData extends Data
+{
+    public function __construct(
+        #[Uuid()]
+        public string $uuid,
+        #[Max(15), IP, StartsWith('192.')]
+        public string $ip,
+    ) {
+    }
+}
+```
 
-[Docs](https://laravel.com/docs/validation#rule-accepted)
+## Creating your validation attribute
+
+A validation attribute is a class that extends `ValidationRule` and returns an array of validation rules when the `getRules` method is called:
+
+```php
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class CustomRule extends ValidationRule
+{
+    public function getRules(): array
+    {
+        return [new CustomRule()];
+    }
+}
+```
+
+## Available validation attributes
+
+### Accepted
+
+[Docs](https://laravel.com/docs/9.x/validation#rule-accepted)
 
 ```php
 #[Accepted]
-public bool $closure; 
+public bool $value; 
 ```
 
-## AcceptedIf
+### AcceptedIf
 
-[Docs](https://laravel.com/docs/validation#rule-accepted-if)
+[Docs](https://laravel.com/docs/9.x/validation#rule-accepted-if)
 
 ```php
 #[AcceptedIf('other_field', 'equals_this')]
-public bool $closure; 
+public bool $value; 
 ```
 
-## ActiveUrl
+### ActiveUrl
 
-[Docs](https://laravel.com/docs/validation#rule-active-url)
+[Docs](https://laravel.com/docs/9.x/validation#rule-active-url)
 
 ```php
 #[ActiveUrl]
-public string $closure; 
+public string $value; 
 ```
 
-## After
+### After
 
-[Docs](https://laravel.com/docs/validation#rule-after)
+[Docs](https://laravel.com/docs/9.x/validation#rule-after)
 
 ```php
+#[After('other_field')]
+public Carbon $value; 
+
 #[After('tomorrow')]
-public Carbon $closure; 
+public Carbon $value; 
 
 #[After(Carbon::yesterday())]
-public Carbon $closure; 
-
-// Always use field references when referencing other fields
-#[After(new FieldReference('other_field'))]
-public Carbon $closure; 
+public Carbon $value; 
 ```
 
-## AfterOrEqual
+### AfterOrEqual
 
-[Docs](https://laravel.com/docs/validation#rule-after-or-equal)
+[Docs](https://laravel.com/docs/9.x/validation#rule-after-or-equal)
 
 ```php
+#[AfterOrEqual('other_field')]
+public Carbon $value; 
+
 #[AfterOrEqual('tomorrow')]
-public Carbon $closure; 
+public Carbon $value; 
 
 #[AfterOrEqual(Carbon::yesterday())]
-public Carbon $closure; 
-
-// Always use field references when referencing other fields
-#[AfterOrEqual(new FieldReference('other_field'))]
-public Carbon $closure; 
+public Carbon $value; 
 ```
 
-## Alpha
+### Alpha
 
-[Docs](https://laravel.com/docs/validation#rule-alpha)
+[Docs](https://laravel.com/docs/9.x/validation#rule-alpha)
 
 ```php
 #[Alpha]
-public string $closure; 
+public string $value; 
 ```
 
-## AlphaDash
+### AlphaDash
 
-[Docs](https://laravel.com/docs/validation#rule-alpha-dash)
+[Docs](https://laravel.com/docs/9.x/validation#rule-alpha-dash)
 
 ```php
 #[AlphaDash]
-public string $closure; 
+public string $value; 
 ```
 
-## AlphaNumeric
+### AlphaNumeric
 
-[Docs](https://laravel.com/docs/validation#rule-alpha-num)
+[Docs](https://laravel.com/docs/9.x/validation#rule-alpha-num)
 
 ```php
 #[AlphaNumeric]
-public string $closure; 
+public string $value; 
 ```
 
-## ArrayType
+### ArrayType
 
-[Docs](https://laravel.com/docs/validation#rule-array)
+[Docs](https://laravel.com/docs/9.x/validation#rule-array)
 
 ```php
 #[ArrayType]
-public array $closure; 
+public array $value; 
 
 #[ArrayType(['valid_key', 'other_valid_key'])]
-public array $closure; 
+public array $value; 
 
 #[ArrayType('valid_key', 'other_valid_key')]
-public array $closure; 
+public array $value; 
 ```
 
-## Bail
+### Bail
 
-[Docs](https://laravel.com/docs/validation#rule-bail)
+[Docs](https://laravel.com/docs/9.x/validation#rule-bail)
 
 ```php
 #[Bail]
-public string $closure; 
+public string $value; 
 ```
 
-## Before
+### Before
 
-[Docs](https://laravel.com/docs/validation#rule-before)
+[Docs](https://laravel.com/docs/9.x/validation#rule-before)
 
 ```php
+#[Before('other_field')]
+public Carbon $value; 
+
 #[Before('tomorrow')]
-public Carbon $closure; 
+public Carbon $value; 
 
 #[Before(Carbon::yesterday())]
-public Carbon $closure; 
-
-// Always use field references when referencing other fields
-#[Before(new FieldReference('other_field'))]
-public Carbon $closure; 
+public Carbon $value; 
 ```
 
-## BeforeOrEqual
+### BeforeOrEqual
 
-[Docs](https://laravel.com/docs/validation#rule-before-or-equal)
+[Docs](https://laravel.com/docs/9.x/validation#rule-before-or-equal)
 
 ```php
+#[BeforeOrEqual('other_field')]
+public Carbon $value; 
+
 #[BeforeOrEqual('tomorrow')]
-public Carbon $closure; 
+public Carbon $value; 
 
 #[BeforeOrEqual(Carbon::yesterday())]
-public Carbon $closure; 
-
-// Always use field references when referencing other fields
-#[BeforeOrEqual(new FieldReference('other_field'))]
-public Carbon $closure; 
+public Carbon $value; 
 ```
 
-## Between
+### Between
 
-[Docs](https://laravel.com/docs/validation#rule-between)
+[Docs](https://laravel.com/docs/9.x/validation#rule-between)
 
 ```php
 #[Between(3.14, 42)]
-public int $closure; 
+public int $value; 
 ```
 
-## BooleanType
+### BooleanType
 
-[Docs](https://laravel.com/docs/validation#rule-boolean)
+[Docs](https://laravel.com/docs/9.x/validation#rule-boolean)
 
 ```php
 #[BooleanType]
-public bool $closure; 
+public bool $value; 
 ```
 
-## Confirmed
+### Confirmed
 
-[Docs](https://laravel.com/docs/validation#rule-confirmed)
+[Docs](https://laravel.com/docs/9.x/validation#rule-confirmed)
 
 ```php
 #[Confirmed]
-public string $closure; 
+public string $value; 
 ```
 
-## CurrentPassword
+### CurrentPassword
 
-[Docs](https://laravel.com/docs/validation#rule-current-password)
+[Docs](https://laravel.com/docs/9.x/validation#rule-current-password)
 
 ```php
 #[CurrentPassword]
-public string $closure; 
+public string $value; 
 
 #[CurrentPassword('api')]
-public string $closure; 
+public string $value; 
 ```
 
-## Date
+### Date
 
-[Docs](https://laravel.com/docs/validation#rule-date)
+[Docs](https://laravel.com/docs/9.x/validation#rule-date)
 
 ```php
 #[Date]
-public Carbon $date; 
+public Carbon $value; 
 ```
 
-## DateEquals
+### DateEquals
 
-[Docs](https://laravel.com/docs/validation#rule-date-equals)
+[Docs](https://laravel.com/docs/9.x/validation#rule-date-equals)
 
 ```php
 #[DateEquals('tomorrow')]
-public Carbon $date; 
+public Carbon $value; 
 
 #[DateEquals(Carbon::yesterday())]
-public Carbon $date; 
+public Carbon $value; 
 ```
 
-## DateFormat
+### DateFormat
 
-[Docs](https://laravel.com/docs/validation#rule-date-format)
+[Docs](https://laravel.com/docs/9.x/validation#rule-date-format)
 
 ```php
 #[DateFormat('d-m-Y')]
-public Carbon $date;
-
-#[DateFormat(['Y-m-d', 'Y-m-d H:i:s'])]
-public Carbon $date;  
+public Carbon $value; 
 ```
 
-## Declined
+### Different
 
-[Docs](https://laravel.com/docs/validation#rule-declined)
-
-```php
-#[Declined]
-public bool $closure; 
-```
-
-## DeclinedIf
-
-[Docs](https://laravel.com/docs/validation#rule-declined-if)
-
-```php
-#[DeclinedIf('other_field', 'equals_this')]
-public bool $closure; 
-```
-
-## Different
-
-[Docs](https://laravel.com/docs/validation#rule-different)
+[Docs](https://laravel.com/docs/9.x/validation#rule-different)
 
 ```php
 #[Different('other_field')]
-public string $closure; 
+public string $value; 
 ```
 
-## Digits
+### Digits
 
-[Docs](https://laravel.com/docs/validation#rule-digits)
+[Docs](https://laravel.com/docs/9.x/validation#rule-digits)
 
 ```php
 #[Digits(10)]
-public int $closure; 
+public int $value; 
 ```
 
-## DigitsBetween
+### DigitsBetween
 
-[Docs](https://laravel.com/docs/validation#rule-digits-between)
+[Docs](https://laravel.com/docs/9.x/validation#rule-digits-between)
 
 ```php
 #[DigitsBetween(2, 10)]
-public int $closure; 
+public int $value; 
 ```
 
-## Dimensions
+### Dimensions
 
-[Docs](https://laravel.com/docs/validation#rule-dimensions)
+[Docs](https://laravel.com/docs/9.x/validation#rule-dimensions)
 
 ```php
 #[Dimensions(ratio: 1.5)]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 
 #[Dimensions(maxWidth: 100, maxHeight: 100)]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 ```
 
-## Distinct
+### Distinct
 
-[Docs](https://laravel.com/docs/validation#rule-distinct)
+[Docs](https://laravel.com/docs/9.x/validation#rule-distinct)
 
 ```php
 #[Distinct]
-public string $closure;
+public string $value;
 
 #[Distinct(Distinct::Strict)]
-public string $closure;  
+public string $value;  
 
 #[Distinct(Distinct::IgnoreCase)]
-public string $closure;  
+public string $value;  
 ```
 
-## DoesntEndWith
+### Email
 
-[Docs](https://laravel.com/docs/validation#rule-doesnt-end-with)
-
-```php
-#[DoesntEndWith('a')]
-public string $closure;
-
-#[DoesntEndWith(['a', 'b'])]
-public string $closure;
-
-#[DoesntEndWith('a', 'b')]
-public string $closure;
-```
-
-## DoesntStartWith
-
-[Docs](https://laravel.com/docs/validation#rule-doesnt-start-with)
-
-```php
-#[DoesntStartWith('a')]
-public string $closure;
-
-#[DoesntStartWith(['a', 'b'])]
-public string $closure;
-
-#[DoesntStartWith('a', 'b')]
-public string $closure;
-```
-
-## Email
-
-[Docs](https://laravel.com/docs/validation#rule-email)
+[Docs](https://laravel.com/docs/9.x/validation#rule-email)
 
 ```php
 #[Email]
-public string $closure;
+public string $value;
 
 #[Email(Email::RfcValidation)]
-public string $closure;  
+public string $value;  
 
-#[Email([Email::RfcValidation, Email::DnsCheckValidation])]
-public string $closure;  
+#[Email([Distinct::RfcValidation, Distinct::DnsCheckValidation])]
+public string $value;  
 
-#[Email(Email::RfcValidation, Email::DnsCheckValidation)]
-public string $closure;  
+#[Email(Distinct::RfcValidation, Distinct::DnsCheckValidation)]
+public string $value;  
 ```
 
-## EndsWith
+### EndsWith
 
-[Docs](https://laravel.com/docs/validation#rule-ends-with)
+[Docs](https://laravel.com/docs/9.x/validation#rule-ends-with)
 
 ```php
 #[EndsWith('a')]
-public string $closure;
+public string $value;
 
 #[EndsWith(['a', 'b'])]
-public string $closure;
+public string $value;
 
 #[EndsWith('a', 'b')]
-public string $closure;
+public string $value;
 ```
 
-## Enum
+### Enum
 
-[Docs](https://laravel.com/docs/validation#rule-enum)
+[Docs](https://laravel.com/docs/9.x/validation#rule-enum)
 
 ```php
 #[Enum(ChannelType::class)]
-public string $closure;
+public string $value;
 ```
 
-## ExcludeIf
+### ExcludeIf
 
-*At the moment the data is not yet excluded due to technical reasons, v4 should fix this*
-
-[Docs](https://laravel.com/docs/validation#rule-exclude-if)
+[Docs](https://laravel.com/docs/9.x/validation#rule-exclude-if)
 
 ```php
 #[ExcludeIf('other_field', 'has_value')]
-public string $closure;
+public string $value;
 ```
 
-## ExcludeUnless
+### ExcludeUnless
 
-*At the moment the data is not yet excluded due to technical reasons, v4 should fix this*
-
-[Docs](https://laravel.com/docs/validation#rule-exclude-unless)
+[Docs](https://laravel.com/docs/9.x/validation#rule-exclude-unless)
 
 ```php
 #[ExcludeUnless('other_field', 'has_value')]
-public string $closure;
+public string $value;
 ```
 
-## ExcludeWith
+### ExcludeWithout
 
-*At the moment the data is not yet excluded due to technical reasons, v4 should fix this*
-
-[Docs](https://laravel.com/docs/validation#rule-exclude-with)
-
-```php
-#[ExcludeWith('other_field')]
-public string $closure;
-```
-
-## ExcludeWithout
-
-*At the moment the data is not yet excluded due to technical reasons, v4 should fix this*
-
-[Docs](https://laravel.com/docs/validation#rule-exclude-without)
+[Docs](https://laravel.com/docs/9.x/validation#rule-exclude-without)
 
 ```php
 #[ExcludeWithout('other_field')]
-public string $closure;
+public string $value;
 ```
 
-## Exists
+### Exists
 
-[Docs](https://laravel.com/docs/validation#rule-exists)
+[Docs](https://laravel.com/docs/9.x/validation#rule-exists)
 
 ```php
 #[Exists('users')]
-public string $closure; 
+public string $value; 
 
 #[Exists(User::class)]
-public string $closure; 
+public string $value; 
 
 #[Exists('users', 'email')]
-public string $closure;
+public string $value;
 
 #[Exists('users', 'email', connection: 'tenant')]
-public string $closure;
+public string $value;
 
 #[Exists('users', 'email', withoutTrashed: true)]
-public string $closure;
+public string $value;
 ```
 
-## File
+### File
 
-[Docs](https://laravel.com/docs/validation#rule-file)
+[Docs](https://laravel.com/docs/9.x/validation#rule-file)
 
 ```php
 #[File]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 ```
 
-## Filled
+### Filled
 
-[Docs](https://laravel.com/docs/validation#rule-filled)
+[Docs](https://laravel.com/docs/9.x/validation#rule-filled)
 
 ```php
 #[Filled]
-public string $closure; 
+public string $value; 
 ```
 
-## GreaterThan
+### GreaterThan
 
-[Docs](https://laravel.com/docs/validation#rule-gt)
+[Docs](https://laravel.com/docs/9.x/validation#rule-gt)
 
 ```php
 #[GreaterThan('other_field')]
-public int $closure; 
+public int $value; 
 ```
 
-## GreaterThanOrEqualTo
+### GreaterThanOrEqualTo
 
-[Docs](https://laravel.com/docs/validation#rule-gte)
+[Docs](https://laravel.com/docs/9.x/validation#rule-gte)
 
 ```php
 #[GreaterThanOrEqualTo('other_field')]
-public int $closure; 
+public int $value; 
 ```
 
-## Image
+### Image
 
-[Docs](https://laravel.com/docs/validation#rule-image)
+[Docs](https://laravel.com/docs/9.x/validation#rule-image)
 
 ```php
 #[Image]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 ```
 
-## In
+### In
 
-[Docs](https://laravel.com/docs/validation#rule-in)
+[Docs](https://laravel.com/docs/9.x/validation#rule-in)
 
 ```php
 #[In([1, 2, 3, 'a', 'b'])]
-public mixed $closure; 
+public mixed $value; 
 
 #[In(1, 2, 3, 'a', 'b')]
-public mixed $closure; 
+public mixed $value; 
 ```
 
-## InArray
+### InArray
 
-[Docs](https://laravel.com/docs/validation#rule-in-array)
+[Docs](https://laravel.com/docs/9.x/validation#rule-in-array)
 
 ```php
 #[InArray('other_field')]
-public string $closure; 
+public string $value; 
 ```
 
-## IntegerType
+### IntegerType
 
-[Docs](https://laravel.com/docs/validation#rule-integer)
+[Docs](https://laravel.com/docs/9.x/validation#rule-integer)
 
 ```php
 #[IntegerType]
-public int $closure; 
+public int $value; 
 ```
 
-## IP
+### IP
 
-[Docs](https://laravel.com/docs/validation#rule-ip)
+[Docs](https://laravel.com/docs/9.x/validation#rule-ip)
 
 ```php
 #[IP]
-public string $closure; 
+public string $value; 
 ```
 
-## IPv4
+### IPv4
 
-[Docs](https://laravel.com/docs/validation#ipv4)
+[Docs](https://laravel.com/docs/9.x/validation#rule-ipv4)
 
 ```php
 #[IPv4]
-public string $closure; 
+public string $value; 
 ```
 
-## IPv6
+### IPv6
 
-[Docs](https://laravel.com/docs/validation#ipv6)
+[Docs](https://laravel.com/docs/9.x/validation#rule-ipv6)
 
 ```php
 #[IPv6]
-public string $closure; 
+public string $value; 
 ```
 
-## Json
+### Json
 
-[Docs](https://laravel.com/docs/validation#rule-json)
+[Docs](https://laravel.com/docs/9.x/validation#rule-json)
 
 ```php
 #[Json]
-public string $closure; 
+public string $value; 
 ```
 
-## LessThan
+### LessThan
 
-[Docs](https://laravel.com/docs/validation#rule-lt)
+[Docs](https://laravel.com/docs/9.x/validation#rule-lt)
 
 ```php
 #[LessThan('other_field')]
-public int $closure; 
+public int $value; 
 ```
 
-## LessThanOrEqualTo
+### LessThanOrEqualTo
 
-[Docs](https://laravel.com/docs/validation#rule-lte)
+[Docs](https://laravel.com/docs/9.x/validation#rule-lte)
 
 ```php
 #[LessThanOrEqualTo('other_field')]
-public int $closure; 
+public int $value; 
 ```
 
-## Lowercase
+### Max
 
-[Docs](https://laravel.com/docs/validation#rule-lowercase)
-
-```php
-#[Lowercase]
-public string $closure; 
-```
-
-## List
-
-[Docs](https://laravel.com/docs/validation#rule-list)
-
-```php
-#[List]
-public array $array; 
-```
-
-## MacAddress
-
-[Docs](https://laravel.com/docs/validation#rule-mac)
-
-```php
-#[MacAddress]
-public string $closure; 
-```
-
-## Max
-
-[Docs](https://laravel.com/docs/validation#rule-max)
+[Docs](https://laravel.com/docs/9.x/validation#rule-max)
 
 ```php
 #[Max(20)]
-public int $closure; 
+public int $value; 
 ```
 
-## MaxDigits
+### MimeTypes
 
-[Docs](https://laravel.com/docs/validation#rule-max-digits)
-
-```php
-#[MaxDigits(10)]
-public int $closure; 
-```
-
-## MimeTypes
-
-[Docs](https://laravel.com/docs/validation#rule-mimetypes)
+[Docs](https://laravel.com/docs/9.x/validation#rule-mimetypes)
 
 ```php
 #[MimeTypes('video/quicktime')]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 
 #[MimeTypes(['video/quicktime', 'video/avi'])]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 
 #[MimeTypes('video/quicktime', 'video/avi')]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 ```
 
-## Mimes
+### Mimes
 
-[Docs](https://laravel.com/docs/validation#rule-mimes)
+[Docs](https://laravel.com/docs/9.x/validation#rule-mimes)
 
 ```php
 #[Mimes('jpg')]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 
 #[Mimes(['jpg', 'png'])]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 
 #[Mimes('jpg', 'png')]
-public UploadedFile $closure; 
+public UploadedFile $value; 
 ```
 
-## Min
+### Min
 
-[Docs](https://laravel.com/docs/validation#rule-min)
+[Docs](https://laravel.com/docs/9.x/validation#rule-min)
 
 ```php
 #[Min(20)]
-public int $closure; 
+public int $value; 
 ```
 
-## MinDigits
+### MultipleOf
 
-[Docs](https://laravel.com/docs/validation#rule-min-digits)
-
-```php
-#[MinDigits(2)]
-public int $closure; 
-```
-
-## MultipleOf
-
-[Docs](https://laravel.com/docs/validation#rule-multiple-of)
+[Docs](https://laravel.com/docs/9.x/validation#rule-multiple-of)
 
 ```php
 #[MultipleOf(3)]
-public int $closure; 
+public int $value; 
 ```
 
-## NotIn
+### NotIn
 
-[Docs](https://laravel.com/docs/validation#rule-not-in)
+[Docs](https://laravel.com/docs/9.x/validation#rule-not-in)
 
 ```php
 #[NotIn([1, 2, 3, 'a', 'b'])]
-public mixed $closure; 
+public mixed $value; 
 
 #[NotIn(1, 2, 3, 'a', 'b')]
-public mixed $closure; 
+public mixed $value; 
 ```
 
-## NotRegex
+### NotRegex
 
-[Docs](https://laravel.com/docs/validation#rule-not-regex)
+[Docs](https://laravel.com/docs/9.x/validation#rule-not-regex)
 
 ```php
 #[NotRegex('/^.+$/i')]
-public string $closure; 
+public string $value; 
 ```
 
-## Nullable
+### Nullable
 
-[Docs](https://laravel.com/docs/validation#rule-nullable)
+[Docs](https://laravel.com/docs/9.x/validation#rule-nullable)
 
 ```php
 #[Nullable]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## Numeric
+### Numeric
 
-[Docs](https://laravel.com/docs/validation#rule-numeric)
+[Docs](https://laravel.com/docs/9.x/validation#rule-numeric)
 
 ```php
 #[Numeric]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## Password
+### Password
 
-[Docs](https://laravel.com/docs/validation#rule-password)
+[Docs](https://laravel.com/docs/9.x/validation#rule-password)
 
 ```php
 #[Password(min: 12, letters: true, mixedCase: true, numbers: false, symbols: false, uncompromised: true, uncompromisedThreshold: 0)]
-public string $closure; 
+public string $value; 
 ```
 
-## Present
+### Present
 
-[Docs](https://laravel.com/docs/validation#rule-present)
+[Docs](https://laravel.com/docs/9.x/validation#rule-present)
 
 ```php
 #[Present]
-public string $closure; 
+public string $value; 
 ```
 
-## Prohibited
+### Prohibited
 
-[Docs](https://laravel.com/docs/validation#rule-prohibited)
+[Docs](https://laravel.com/docs/9.x/validation#rule-prohibited)
 
 ```php
 #[Prohibited]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## ProhibitedIf
+### ProhibitedIf
 
-[Docs](https://laravel.com/docs/validation#rule-prohibited-if)
+[Docs](https://laravel.com/docs/9.x/validation#rule-prohibited-if)
 
 ```php
 #[ProhibitedIf('other_field', 'has_value')]
-public ?string $closure; 
+public ?string $value; 
 
 #[ProhibitedIf('other_field', ['has_value', 'or_this_value'])]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## ProhibitedUnless
+### ProhibitedUnless
 
-[Docs](https://laravel.com/docs/validation#rule-prohibited-unless)
+[Docs](https://laravel.com/docs/9.x/validation#rule-prohibited-unless)
 
 ```php
 #[ProhibitedUnless('other_field', 'has_value')]
-public ?string $closure; 
+public ?string $value; 
 
 #[ProhibitedUnless('other_field', ['has_value', 'or_this_value'])]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## Prohibits
+### Prohibits
 
-[Docs](https://laravel.com/docs/validation#rule-prohibits)
+[Docs](https://laravel.com/docs/9.x/validation#rule-prohibits)
 
 ```php
 #[Prohibits('other_field')]
-public ?string $closure; 
+public ?string $value; 
 
 #[Prohibits(['other_field', 'another_field'])]
-public ?string $closure; 
+public ?string $value; 
 
 #[Prohibits('other_field', 'another_field')]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## Regex
+### Regex
 
-[Docs](https://laravel.com/docs/validation#rule-regex)
+[Docs](https://laravel.com/docs/9.x/validation#rule-regex)
 
 ```php
 #[Regex('/^.+$/i')]
-public string $closure; 
+public string $value; 
 ```
 
-## Required
+### Required
 
-[Docs](https://laravel.com/docs/validation#rule-required)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required)
 
 ```php
 #[Required]
-public string $closure; 
+public string $value; 
 ```
 
-## RequiredIf
+### RequiredIf
 
-[Docs](https://laravel.com/docs/validation#rule-required-if)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required-if)
 
 ```php
 #[RequiredIf('other_field', 'value')]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredIf('other_field', ['value', 'another_value'])]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## RequiredUnless
+### RequiredUnless
 
-[Docs](https://laravel.com/docs/validation#rule-required-unless)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required-unless)
 
 ```php
 #[RequiredUnless('other_field', 'value')]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredUnless('other_field', ['value', 'another_value'])]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## RequiredWith
+### RequiredWith
 
-[Docs](https://laravel.com/docs/validation#rule-required-with)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required-with)
 
 ```php
 #[RequiredWith('other_field')]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWith(['other_field', 'another_field'])]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWith('other_field', 'another_field')]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## RequiredWithAll
+### RequiredWithAll
 
-[Docs](https://laravel.com/docs/validation#rule-required-with-all)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required-with-all)
 
 ```php
 #[RequiredWithAll('other_field')]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWithAll(['other_field', 'another_field'])]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWithAll('other_field', 'another_field')]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## RequiredWithout
+### RequiredWithout
 
-[Docs](https://laravel.com/docs/validation#rule-required-without)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required-without)
 
 ```php
 #[RequiredWithout('other_field')]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWithout(['other_field', 'another_field'])]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWithout('other_field', 'another_field')]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## RequiredWithoutAll
+### RequiredWithoutAll
 
-[Docs](https://laravel.com/docs/validation#rule-required-without-all)
+[Docs](https://laravel.com/docs/9.x/validation#rule-required-without-all)
 
 ```php
 #[RequiredWithoutAll('other_field')]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWithoutAll(['other_field', 'another_field'])]
-public ?string $closure; 
+public ?string $value; 
 
 #[RequiredWithoutAll('other_field', 'another_field')]
-public ?string $closure; 
+public ?string $value; 
 ```
 
-## RequiredArrayKeys
-
-[Docs](https://laravel.com/docs/validation#rule-required-array-keys)
-
-```php
-#[RequiredArrayKeys('a')]
-public array $closure;
-
-#[RequiredArrayKeys(['a', 'b'])]
-public array $closure;
-
-#[RequiredArrayKeys('a', 'b')]
-public array $closure;
-```
-
-## Rule
+### Rule
 
 ```php
 #[Rule('string|uuid')]
-public string $closure; 
+public string $value; 
 
 #[Rule(['string','uuid'])]
-public string $closure; 
+public string $value; 
 ```
 
-## Same
+### Same
 
-[Docs](https://laravel.com/docs/validation#rule-same)
+[Docs](https://laravel.com/docs/9.x/validation#rule-same)
 
 ```php
 #[Same('other_field')]
-public string $closure; 
+public string $value; 
 ```
 
-## Size
+### Size
 
-[Docs](https://laravel.com/docs/validation#rule-size)
+[Docs](https://laravel.com/docs/9.x/validation#rule-size)
 
 ```php
 #[Size(10)]
-public string $closure; 
+public string $value; 
 ```
 
-## Sometimes
+### Sometimes
 
-[Docs](https://laravel.com/docs/validation#validating-when-present)
+[Docs](https://laravel.com/docs/9.x/validation#validating-when-present)
 
 ```php
 #[Sometimes]
-public string $closure; 
+public string $value; 
 ```
 
-## StartsWith
+### StartsWith
 
-[Docs](https://laravel.com/docs/validation#rule-starts-with)
+[Docs](https://laravel.com/docs/9.x/validation#rule-starts-with)
 
 ```php
 #[StartsWith('a')]
-public string $closure;
+public string $value;
 
 #[StartsWith(['a', 'b'])]
-public string $closure;
+public string $value;
 
 #[StartsWith('a', 'b')]
-public string $closure;
+public string $value;
 ```
 
-## StringType
+### StringType
 
-[Docs](https://laravel.com/docs/validation#rule-string)
+[Docs](https://laravel.com/docs/9.x/validation#rule-string)
 
 ```php
 #[StringType()]
-public string $closure; 
+public string $value; 
 ```
 
-## TimeZone
+### TimeZone
 
-[Docs](https://laravel.com/docs/validation#rule-timezone)
+[Docs](https://laravel.com/docs/9.x/validation#rule-timezone)
 
 ```php
 #[TimeZone()]
-public string $closure; 
+public string $value; 
 ```
 
-## Unique
+### Unique
 
-[Docs](https://laravel.com/docs/validation#rule-unique)
+[Docs](https://laravel.com/docs/9.x/validation#rule-unqiue)
 
 ```php
 #[Unique('users')]
-public string $closure; 
+public string $value; 
 
 #[Unique(User::class)]
-public string $closure; 
+public string $value; 
 
 #[Unique('users', 'email')]
-public string $closure;
+public string $value;
 
 #[Unique('users', connection: 'tenant')]
-public string $closure;
+public string $value;
 
 #[Unique('users', withoutTrashed: true)]
-public string $closure;
+public string $value;
 
 #[Unique('users', ignore: 5)]
-public string $closure;
+public string $value;
 ```
 
-## Uppercase
+### Url
 
-[Docs](https://laravel.com/docs/validation#rule-uppercase)
-
-```php
-#[Uppercase]
-public string $closure; 
-```
-
-## Url
-
-[Docs](https://laravel.com/docs/validation#rule-url)
+[Docs](https://laravel.com/docs/9.x/validation#rule-url)
 
 ```php
 #[Url]
-public string $closure; 
+public string $value; 
 ```
 
-## Ulid
+### Uuid
 
-[Docs](https://laravel.com/docs/validation#rule-ulid)
-
-```php
-#[Ulid]
-public string $closure; 
-```
-
-## Uuid
-
-[Docs](https://laravel.com/docs/validation#rule-uuid)
+[Docs](https://laravel.com/docs/9.x/validation#rule-uuid)
 
 ```php
 #[Uuid]
-public string $closure; 
+public string $value; 
 ```

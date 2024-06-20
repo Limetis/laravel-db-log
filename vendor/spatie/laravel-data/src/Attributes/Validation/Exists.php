@@ -6,39 +6,26 @@ use Attribute;
 use Closure;
 use Exception;
 use Illuminate\Validation\Rules\Exists as BaseExists;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
-use Spatie\LaravelData\Support\Validation\ValidationPath;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class Exists extends ObjectValidationAttribute
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class Exists extends ValidationAttribute
 {
+    protected BaseExists $rule;
+
     public function __construct(
-        protected null|string|RouteParameterReference $table = null,
-        protected null|string|RouteParameterReference $column = 'NULL',
-        protected null|string|RouteParameterReference $connection = null,
-        protected bool|RouteParameterReference $withoutTrashed = false,
-        protected string|RouteParameterReference $deletedAtColumn = 'deleted_at',
-        protected ?Closure $where = null,
-        protected ?BaseExists $rule = null,
+        ?string $table = null,
+        ?string $column = 'NULL',
+        ?string $connection = null,
+        bool $withoutTrashed = false,
+        string $deletedAtColumn = 'deleted_at',
+        ?Closure $where = null,
+        ?BaseExists $rule = null,
     ) {
         if ($rule === null && $table === null) {
             throw new Exception('Could not make exists rule since a table or rule is required');
         }
-    }
 
-    public function getRule(ValidationPath $path): object|string
-    {
-        if($this->rule) {
-            return $this->rule;
-        }
-
-        $table = $this->normalizePossibleRouteReferenceParameter($this->table);
-        $column = $this->normalizePossibleRouteReferenceParameter($this->column);
-        $connection = $this->normalizePossibleRouteReferenceParameter($this->connection);
-        $withoutTrashed = $this->normalizePossibleRouteReferenceParameter($this->withoutTrashed);
-        $deletedAtColumn = $this->normalizePossibleRouteReferenceParameter($this->deletedAtColumn);
-
-        $rule = new BaseExists(
+        $rule ??= new BaseExists(
             $connection ? "{$connection}.{$table}" : $table,
             $column
         );
@@ -47,11 +34,16 @@ class Exists extends ObjectValidationAttribute
             $rule->withoutTrashed($deletedAtColumn);
         }
 
-        if ($this->where) {
-            $rule->where($this->where);
+        if ($where) {
+            $rule->where($where);
         }
 
-        return $this->rule = $rule;
+        $this->rule = $rule;
+    }
+
+    public function getRules(): array
+    {
+        return [$this->rule];
     }
 
     public static function keyword(): string

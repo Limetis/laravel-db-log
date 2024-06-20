@@ -3,12 +3,11 @@
 namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Between extends StringValidationAttribute
 {
-    public function __construct(protected int|float|RouteParameterReference $min, protected int|float|RouteParameterReference $max)
+    public function __construct(protected int | float $min, protected int | float $max)
     {
     }
 

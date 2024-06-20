@@ -2,17 +2,8 @@
 
 namespace Spatie\LaravelData\Contracts;
 
-use Illuminate\Contracts\Support\Responsable;
-
-interface ResponsableData extends TransformableData, Responsable
+interface ResponsableData
 {
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function toResponse($request);
-
     public static function allowedRequestIncludes(): ?array;
 
     public static function allowedRequestExcludes(): ?array;

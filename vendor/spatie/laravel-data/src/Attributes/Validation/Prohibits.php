@@ -4,18 +4,15 @@ namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
 use Illuminate\Support\Arr;
-use Spatie\LaravelData\Support\Validation\References\FieldReference;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Prohibits extends StringValidationAttribute
 {
-    protected array $fields;
+    protected string|array $fields;
 
-    public function __construct(array|string|FieldReference ...$fields)
+    public function __construct(array | string ...$fields)
     {
-        foreach (Arr::flatten($fields) as $field) {
-            $this->fields[] = $field instanceof FieldReference ? $field : new FieldReference($field);
-        }
+        $this->fields = Arr::flatten($fields);
     }
 
     public static function keyword(): string
@@ -26,7 +23,7 @@ class Prohibits extends StringValidationAttribute
     public function parameters(): array
     {
         return [
-            $this->fields,
+            $this->normalizeValue($this->fields),
         ];
     }
 }

@@ -4,17 +4,13 @@ namespace Spatie\LaravelData\DataPipes;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
-use Spatie\LaravelData\Support\Creation\CreationContext;
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Support\DataClass;
 
 class AuthorizedDataPipe implements DataPipe
 {
-    public function handle(
-        mixed $payload,
-        DataClass $class,
-        array $properties,
-        CreationContext $creationContext
-    ): array {
+    public function handle(mixed $payload, DataClass $class, Collection $properties): Collection
+    {
         if (! $payload instanceof Request) {
             return $properties;
         }

@@ -4,14 +4,13 @@ namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
 use Illuminate\Support\Arr;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class EndsWith extends StringValidationAttribute
 {
     protected string|array $values;
 
-    public function __construct(string|array|RouteParameterReference ...$values)
+    public function __construct(string | array ...$values)
     {
         $this->values = Arr::flatten($values);
     }
@@ -23,6 +22,6 @@ class EndsWith extends StringValidationAttribute
 
     public function parameters(): array
     {
-        return [$this->values];
+        return [$this->normalizeValue($this->values)];
     }
 }

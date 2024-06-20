@@ -6,7 +6,6 @@ use phpDocumentor\Reflection\Fqsen;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Boolean;
-use phpDocumentor\Reflection\Types\Compound;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Nullable;
 use phpDocumentor\Reflection\Types\Object_;
@@ -15,10 +14,9 @@ use ReflectionClass;
 use ReflectionProperty;
 use RuntimeException;
 use Spatie\LaravelData\Contracts\BaseData;
-use Spatie\LaravelData\Enums\DataTypeKind;
+use Spatie\LaravelData\Enums\DataCollectableType;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\Lazy\ClosureLazy;
 use Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer;
 use Spatie\TypeScriptTransformer\Attributes\Optional as TypeScriptOptional;
 use Spatie\TypeScriptTransformer\Structures\MissingSymbolsCollection;
@@ -72,7 +70,7 @@ class DataTypeScriptTransformer extends DtoTransformer
                     || $dataProperty->attributes->contains(
                         fn (object $attribute) => $attribute instanceof TypeScriptOptional
                     )
-                    || ($dataProperty->type->lazyType && $dataProperty->type->lazyType !== ClosureLazy::class)
+                    || $dataProperty->type->isLazy
                     || $dataProperty->type->isOptional;
 
                 $transformed = $this->typeToTypeScript(
@@ -83,13 +81,9 @@ class DataTypeScriptTransformer extends DtoTransformer
 
                 $propertyName = $dataProperty->outputMappedName ?? $dataProperty->name;
 
-                if (! preg_match('/^[$_a-zA-Z][$_a-zA-Z0-9]*$/', $propertyName)) {
-                    $propertyName = "'{$propertyName}'";
-                }
-
                 return $isOptional
-                    ? "{$carry}{$propertyName}?: {$transformed};".PHP_EOL
-                    : "{$carry}{$propertyName}: {$transformed};".PHP_EOL;
+                    ? "{$carry}{$propertyName}?: {$transformed};" . PHP_EOL
+                    : "{$carry}{$propertyName}: {$transformed};" . PHP_EOL;
             },
             ''
         );
@@ -100,7 +94,7 @@ class DataTypeScriptTransformer extends DtoTransformer
         DataProperty $dataProperty,
         MissingSymbolsCollection $missingSymbols,
     ): ?Type {
-        if (! $dataProperty->type->kind->isDataCollectable()) {
+        if (! $dataProperty->type->isDataCollectable) {
             return $this->reflectionToType(
                 $property,
                 $missingSymbols,
@@ -108,14 +102,11 @@ class DataTypeScriptTransformer extends DtoTransformer
             );
         }
 
-        $collectionType = match ($dataProperty->type->kind) {
-            DataTypeKind::DataCollection, DataTypeKind::DataArray, DataTypeKind::DataEnumerable, DataTypeKind::Array, DataTypeKind::Enumerable => $this->dataCollectionType(
-                $dataProperty->type->dataClass,
-                $dataProperty->type->iterableKeyType
-            ),
-            DataTypeKind::DataPaginator, DataTypeKind::DataPaginatedCollection, DataTypeKind::Paginator => $this->paginatedCollectionType($dataProperty->type->dataClass),
-            DataTypeKind::DataCursorPaginator, DataTypeKind::DataCursorPaginatedCollection, DataTypeKind::CursorPaginator => $this->cursorPaginatedCollectionType($dataProperty->type->dataClass),
-            default => throw new RuntimeException('Cannot end up here since the type is dataCollectable')
+        $collectionType = match ($dataProperty->type->dataCollectableType) {
+            DataCollectableType::Default => $this->defaultCollectionType($dataProperty->type->dataClass),
+            DataCollectableType::Paginated => $this->paginatedCollectionType($dataProperty->type->dataClass),
+            DataCollectableType::CursorPaginated => $this->cursorPaginatedCollectionType($dataProperty->type->dataClass),
+            null => throw new RuntimeException('Cannot end up here since the type is dataCollectable')
         };
 
         if ($dataProperty->type->isNullable) {
@@ -123,20 +114,6 @@ class DataTypeScriptTransformer extends DtoTransformer
         }
 
         return $collectionType;
-    }
-
-    protected function dataCollectionType(string $class, ?string $keyType): Type
-    {
-        $keyType = match ($keyType) {
-            'string' => new String_(),
-            'int' => null,
-            default => new Compound([new String_(), new Integer()]),
-        };
-
-        return new Array_(
-            new Object_(new Fqsen("\\{$class}")),
-            $keyType
-        );
     }
 
     protected function defaultCollectionType(string $class): Type

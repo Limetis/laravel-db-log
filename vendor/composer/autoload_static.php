@@ -4,25 +4,18 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
+class ComposerStaticInit7ced9869a4e7bd7827aab4a321d82f5a
 {
     public static $files = array (
-        'e8aa6e4b5a1db2f56ae794f1505391a8' => __DIR__ . '/..' . '/amphp/amp/lib/functions.php',
-        '76cd0796156622033397994f25b0d8fc' => __DIR__ . '/..' . '/amphp/amp/lib/Internal/functions.php',
-        '6cd5651c4fef5ed6b63e8d8b8ffbf3cc' => __DIR__ . '/..' . '/amphp/byte-stream/lib/functions.php',
-        '3da389f428d8ee50333e4391c3f45046' => __DIR__ . '/..' . '/amphp/serialization/src/functions.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '8dc56fe697ca93c4b40d876df1c94584' => __DIR__ . '/..' . '/amphp/process/lib/functions.php',
-        'bcb7d4fc55f4b1a7e10f5806723e9892' => __DIR__ . '/..' . '/amphp/sync/src/functions.php',
-        'e187e371b30897d6dc51cac6a8c94ff6' => __DIR__ . '/..' . '/amphp/sync/src/ConcurrentIterator/functions.php',
-        '430de19db8b7ee88fdbe5c545d82d33d' => __DIR__ . '/..' . '/amphp/parallel/lib/Context/functions.php',
-        '888e1afeed2e8d13ef5a662692091e6e' => __DIR__ . '/..' . '/amphp/parallel/lib/Sync/functions.php',
-        '384cf4f2eb4d2f896db72315a76066ad' => __DIR__ . '/..' . '/amphp/parallel/lib/Worker/functions.php',
-        '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
-        '861372841bb4b8ba9fdd215894666f40' => __DIR__ . '/..' . '/amphp/parallel-functions/src/functions.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
     );
 
@@ -39,11 +32,16 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
+            'Symfony\\Polyfill\\Intl\\Grapheme\\' => 31,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Contracts\\Translation\\' => 30,
+            'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
-            'Symfony\\Component\\Finder\\' => 25,
-            'Spatie\\StructureDiscoverer\\' => 27,
+            'Symfony\\Component\\String\\' => 25,
+            'Symfony\\Component\\Console\\' => 26,
             'Spatie\\LaravelPackageTools\\' => 27,
+            'Spatie\\LaravelData\\Database\\Factories\\' => 38,
             'Spatie\\LaravelData\\' => 19,
         ),
         'P' => 
@@ -60,7 +58,6 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
         ),
         'L' => 
         array (
-            'Laravel\\SerializableClosure\\' => 28,
             'Laravel-DB-log\\LaravelDbLog\\' => 28,
         ),
         'I' => 
@@ -84,17 +81,6 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
         array (
             'Brick\\Math\\' => 11,
         ),
-        'A' => 
-        array (
-            'Amp\\Sync\\' => 9,
-            'Amp\\Serialization\\' => 18,
-            'Amp\\Process\\' => 12,
-            'Amp\\Parser\\' => 11,
-            'Amp\\Parallel\\' => 13,
-            'Amp\\ParallelFunctions\\' => 22,
-            'Amp\\ByteStream\\' => 15,
-            'Amp\\' => 4,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -115,25 +101,45 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
+        ),
+        'Symfony\\Polyfill\\Intl\\Grapheme\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
         'Symfony\\Contracts\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation-contracts',
+        ),
+        'Symfony\\Contracts\\Service\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/service-contracts',
         ),
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\Finder\\' => 
+        'Symfony\\Component\\String\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/finder',
+            0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Spatie\\StructureDiscoverer\\' => 
+        'Symfony\\Component\\Console\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/php-structure-discoverer/src',
+            0 => __DIR__ . '/..' . '/symfony/console',
         ),
         'Spatie\\LaravelPackageTools\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-package-tools/src',
+        ),
+        'Spatie\\LaravelData\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-data/database/factories',
         ),
         'Spatie\\LaravelData\\' => 
         array (
@@ -163,19 +169,15 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Laravel\\SerializableClosure\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laravel/serializable-closure/src',
-        ),
         'Laravel-DB-log\\LaravelDbLog\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/collections',
+            0 => __DIR__ . '/..' . '/illuminate/macroable',
             1 => __DIR__ . '/..' . '/illuminate/conditionable',
-            2 => __DIR__ . '/..' . '/illuminate/macroable',
+            2 => __DIR__ . '/..' . '/illuminate/collections',
             3 => __DIR__ . '/..' . '/illuminate/support',
         ),
         'Illuminate\\Database\\' => 
@@ -210,43 +212,12 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
-        'Amp\\Sync\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/sync/src',
-        ),
-        'Amp\\Serialization\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/serialization/src',
-        ),
-        'Amp\\Process\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/process/lib',
-        ),
-        'Amp\\Parser\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/parser/src',
-        ),
-        'Amp\\Parallel\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/parallel/lib',
-        ),
-        'Amp\\ParallelFunctions\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/parallel-functions/src',
-        ),
-        'Amp\\ByteStream\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/byte-stream/lib',
-        ),
-        'Amp\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/amphp/amp/lib',
-        ),
     );
 
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
@@ -256,9 +227,9 @@ class ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitce0eebab4d0c21c66e76d769d904f30b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7ced9869a4e7bd7827aab4a321d82f5a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7ced9869a4e7bd7827aab4a321d82f5a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7ced9869a4e7bd7827aab4a321d82f5a::$classMap;
 
         }, null, ClassLoader::class);
     }

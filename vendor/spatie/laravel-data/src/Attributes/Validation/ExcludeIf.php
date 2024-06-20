@@ -4,19 +4,12 @@ namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
 use BackedEnum;
-use Spatie\LaravelData\Support\Validation\References\FieldReference;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class ExcludeIf extends StringValidationAttribute
 {
-    protected FieldReference $field;
-
-    public function __construct(
-        string|FieldReference                                              $field,
-        protected string|int|float|bool|BackedEnum|RouteParameterReference $value
-    ) {
-        $this->field = $this->parseFieldReference($field);
+    public function __construct(protected string $field, protected string|int|float|bool|BackedEnum $value)
+    {
     }
 
     public static function keyword(): string
@@ -36,7 +29,7 @@ class ExcludeIf extends StringValidationAttribute
     {
         return [
             $this->field,
-            $this->value,
+            $this->normalizeValue($this->value),
         ];
     }
 }

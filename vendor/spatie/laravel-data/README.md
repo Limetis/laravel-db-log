@@ -1,3 +1,6 @@
+
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 # Powerful data objects for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-data.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-data)
@@ -48,7 +51,7 @@ Why would you be using this package?
 
 ## Are you a visual learner?
 
-In this talk, given at Laracon, you'll see [an introduction to Laravel Data](https://www.youtube.com/watch?v=CrO_7Df1cBc).
+In this talk, given at Laracon, you'll see [an introduction to Laravel Data](https://www.youtube.com/watch?v=f4QShF42c6E&t=29110s).
 
 ## Support us
 
@@ -60,7 +63,7 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Documentation
 
-You will find full documentation on the dedicated [documentation](https://spatie.be/docs/laravel-data/v4/introduction) site.
+You will find full documentation on the dedicated [documentation](https://spatie.be/docs/laravel-data/v2/introduction) site.
 
 ## Testing
 

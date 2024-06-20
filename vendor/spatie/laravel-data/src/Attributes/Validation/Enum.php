@@ -4,16 +4,15 @@ namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
 use Illuminate\Validation\Rules\Enum as EnumRule;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
-use Spatie\LaravelData\Support\Validation\ValidationPath;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class Enum extends ObjectValidationAttribute
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class Enum extends ValidationAttribute
 {
-    public function __construct(
-        protected string|EnumRule|RouteParameterReference $enum,
-        protected ?EnumRule $rule = null,
-    ) {
+    protected EnumRule $enum;
+
+    public function __construct(string|EnumRule $enum)
+    {
+        $this->enum = $enum instanceof EnumRule ? $enum : new EnumRule($enum);
     }
 
     public static function keyword(): string
@@ -21,15 +20,9 @@ class Enum extends ObjectValidationAttribute
         return 'enum';
     }
 
-    public function getRule(ValidationPath $path): object|string
+    public function getRules(): array
     {
-        if ($this->rule) {
-            return $this->rule;
-        }
-
-        return $this->rule = $this->enum instanceof EnumRule
-            ? $this->enum
-            : new EnumRule((string) $this->enum);
+        return [$this->enum];
     }
 
     public static function create(string ...$parameters): static

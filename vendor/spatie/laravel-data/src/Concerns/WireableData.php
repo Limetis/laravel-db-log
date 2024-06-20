@@ -2,7 +2,7 @@
 
 namespace Spatie\LaravelData\Concerns;
 
-use Spatie\LaravelData\Support\Creation\CreationContextFactory;
+use Spatie\LaravelData\Resolvers\DataFromSomethingResolver;
 
 trait WireableData
 {
@@ -13,11 +13,8 @@ trait WireableData
 
     public static function fromLivewire($value): static
     {
-        /** @var CreationContextFactory $factory */
-        $factory = static::factory();
-
-        return $factory
-            ->ignoreMagicalMethod('fromLivewire')
-            ->from($value);
+        return app(DataFromSomethingResolver::class)
+            ->ignoreMagicalMethods('fromLivewire')
+            ->execute(static::class, $value);
     }
 }

@@ -5,21 +5,29 @@ namespace Spatie\LaravelData\Attributes\Validation;
 use Attribute;
 use Illuminate\Contracts\Validation\InvokableRule as InvokableRuleContract;
 use Illuminate\Contracts\Validation\Rule as RuleContract;
-use Illuminate\Contracts\Validation\ValidationRule as ValidationRuleContract;
 use Spatie\LaravelData\Support\Validation\ValidationRule;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Rule extends ValidationRule
 {
-    /** @var array<string|array|ValidationRule|RuleContract|InvokableRuleContract|ValidationRuleContract> */
     protected array $rules = [];
 
-    public function __construct(string|array|ValidationRule|RuleContract|InvokableRuleContract|ValidationRuleContract ...$rules)
+    public function __construct(string | array | ValidationRule | RuleContract | InvokableRuleContract ...$rules)
     {
-        $this->rules = $rules;
+        foreach ($rules as $rule) {
+            $newRules = match (true) {
+                is_string($rule) => explode('|', $rule),
+                $rule instanceof RuleContract,
+                $rule instanceof InvokableRuleContract => [$rule],
+                is_array($rule) => $rule,
+                $rule instanceof ValidationRule => $rule->getRules(),
+            };
+
+            $this->rules = array_merge($this->rules, $newRules);
+        }
     }
 
-    public function get(): array
+    public function getRules(): array
     {
         return $this->rules;
     }

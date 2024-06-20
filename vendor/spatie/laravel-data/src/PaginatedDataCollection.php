@@ -3,21 +3,13 @@
 namespace Spatie\LaravelData;
 
 use Closure;
-use Countable;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Contracts\Support\Responsable;
-use IteratorAggregate;
 use Spatie\LaravelData\Concerns\BaseDataCollectable;
-use Spatie\LaravelData\Concerns\ContextableData;
 use Spatie\LaravelData\Concerns\IncludeableData;
 use Spatie\LaravelData\Concerns\ResponsableData;
 use Spatie\LaravelData\Concerns\TransformableData;
 use Spatie\LaravelData\Concerns\WrappableData;
-use Spatie\LaravelData\Contracts\BaseDataCollectable as BaseDataCollectableContract;
-use Spatie\LaravelData\Contracts\IncludeableData as IncludeableDataContract;
-use Spatie\LaravelData\Contracts\ResponsableData as ResponsableDataContract;
-use Spatie\LaravelData\Contracts\TransformableData as TransformableDataContract;
-use Spatie\LaravelData\Contracts\WrappableData as WrappableDataContract;
+use Spatie\LaravelData\Contracts\DataCollectable;
 use Spatie\LaravelData\Exceptions\CannotCastData;
 use Spatie\LaravelData\Exceptions\PaginatedCollectionIsAlwaysWrapped;
 use Spatie\LaravelData\Support\EloquentCasts\DataCollectionEloquentCast;
@@ -26,9 +18,9 @@ use Spatie\LaravelData\Support\EloquentCasts\DataCollectionEloquentCast;
  * @template TKey of array-key
  * @template TValue
  *
- * @implements IteratorAggregate<TKey, TValue>
+ * @implements  DataCollectable<TKey, TValue>
  */
-class PaginatedDataCollection implements Responsable, BaseDataCollectableContract, TransformableDataContract, ResponsableDataContract, IncludeableDataContract, WrappableDataContract, IteratorAggregate, Countable
+class PaginatedDataCollection implements DataCollectable
 {
     use ResponsableData;
     use IncludeableData;
@@ -37,7 +29,6 @@ class PaginatedDataCollection implements Responsable, BaseDataCollectableContrac
 
     /** @use \Spatie\LaravelData\Concerns\BaseDataCollectable<TKey, TValue> */
     use BaseDataCollectable;
-    use ContextableData;
 
     protected Paginator $items;
 
@@ -57,7 +48,7 @@ class PaginatedDataCollection implements Responsable, BaseDataCollectableContrac
     /**
      * @param Closure(TValue, TKey): TValue $through
      *
-     * @return static<TKey, TValue>
+     * @return static
      */
     public function through(Closure $through): static
     {

@@ -122,9 +122,7 @@ class StreamHandler extends AbstractProcessingHandler
             }
             $this->createDir($url);
             $this->errorMessage = null;
-            set_error_handler(function (...$args) {
-                return $this->customErrorHandler(...$args);
-            });
+            set_error_handler([$this, 'customErrorHandler']);
             try {
                 $stream = fopen($url, 'a');
                 if ($this->filePermission !== null) {
@@ -195,9 +193,7 @@ class StreamHandler extends AbstractProcessingHandler
         $dir = $this->getDirFromStream($url);
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
-            set_error_handler(function (...$args) {
-                return $this->customErrorHandler(...$args);
-            });
+            set_error_handler([$this, 'customErrorHandler']);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
             if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {

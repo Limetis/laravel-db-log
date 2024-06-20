@@ -5,10 +5,9 @@ namespace Spatie\LaravelData\Casts;
 use DateTimeInterface;
 use DateTimeZone;
 use Spatie\LaravelData\Exceptions\CannotCastDate;
-use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 
-class DateTimeInterfaceCast implements Cast, IterableItemCast
+class DateTimeInterfaceCast implements Cast
 {
     public function __construct(
         protected null|string|array $format = null,
@@ -18,21 +17,11 @@ class DateTimeInterfaceCast implements Cast, IterableItemCast
     ) {
     }
 
-    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): DateTimeInterface|Uncastable
+    public function cast(DataProperty $property, mixed $value, array $context): DateTimeInterface|Uncastable
     {
-        return $this->castValue($this->type ?? $property->type->type->findAcceptedTypeForBaseType(DateTimeInterface::class), $value);
-    }
-
-    public function castIterableItem(DataProperty $property, mixed $value, array $properties, CreationContext $context): DateTimeInterface|Uncastable
-    {
-        return $this->castValue($property->type->iterableItemType, $value);
-    }
-
-    protected function castValue(
-        ?string $type,
-        mixed $value,
-    ): Uncastable|null|DateTimeInterface {
         $formats = collect($this->format ?? config('data.date_format'));
+
+        $type = $this->type ?? $property->type->findAcceptedTypeForBaseType(DateTimeInterface::class);
 
         if ($type === null) {
             return Uncastable::create();
@@ -42,7 +31,7 @@ class DateTimeInterfaceCast implements Cast, IterableItemCast
         $datetime = $formats
             ->map(fn (string $format) => rescue(fn () => $type::createFromFormat(
                 $format,
-                (string) $value,
+                $value,
                 isset($this->timeZone) ? new DateTimeZone($this->timeZone) : null
             ), report: false))
             ->first(fn ($value) => (bool) $value);

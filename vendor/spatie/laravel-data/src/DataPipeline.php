@@ -2,10 +2,11 @@
 
 namespace Spatie\LaravelData;
 
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\DataPipes\DataPipe;
+use Spatie\LaravelData\Exceptions\CannotCreateData;
 use Spatie\LaravelData\Normalizers\Normalizer;
 use Spatie\LaravelData\Support\DataConfig;
-use Spatie\LaravelData\Support\ResolvedDataPipeline;
 
 class DataPipeline
 {
@@ -24,6 +25,13 @@ class DataPipeline
     public static function create(): static
     {
         return app(static::class);
+    }
+
+    public function using(mixed $value): static
+    {
+        $this->value = $value;
+
+        return $this;
     }
 
     public function into(string $classString): static
@@ -54,17 +62,12 @@ class DataPipeline
         return $this;
     }
 
-    public function resolve(): ResolvedDataPipeline
+    public function execute(): Collection
     {
-        $normalizers = array_merge(
-            $this->normalizers,
-            $this->classString::normalizers()
-        );
-
         /** @var \Spatie\LaravelData\Normalizers\Normalizer[] $normalizers */
         $normalizers = array_map(
             fn (string|Normalizer $normalizer) => is_string($normalizer) ? app($normalizer) : $normalizer,
-            $normalizers
+            $this->normalizers
         );
 
         /** @var \Spatie\LaravelData\DataPipes\DataPipe[] $pipes */
@@ -73,10 +76,32 @@ class DataPipeline
             $this->pipes
         );
 
-        return new ResolvedDataPipeline(
-            $normalizers,
-            $pipes,
-            $this->dataConfig->getDataClass($this->classString)
-        );
+        $properties = null;
+
+        foreach ($normalizers as $normalizer) {
+            $properties = $normalizer->normalize($this->value);
+
+            if ($properties !== null) {
+                break;
+            }
+        }
+
+        if ($properties === null) {
+            throw CannotCreateData::noNormalizerFound($this->classString, $this->value);
+        }
+
+        $properties = collect($properties);
+
+        $class = $this->dataConfig->getDataClass($this->classString);
+
+        $properties = ($class->name)::prepareForPipeline($properties);
+
+        foreach ($pipes as $pipe) {
+            $piped = $pipe->handle($this->value, $class, $properties);
+
+            $properties = $piped;
+        }
+
+        return $properties;
     }
 }

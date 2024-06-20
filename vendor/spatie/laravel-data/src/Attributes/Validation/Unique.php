@@ -6,43 +6,28 @@ use Attribute;
 use Closure;
 use Exception;
 use Illuminate\Validation\Rules\Unique as BaseUnique;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
-use Spatie\LaravelData\Support\Validation\ValidationPath;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
-class Unique extends ObjectValidationAttribute
+#[Attribute(Attribute::TARGET_PROPERTY)]
+class Unique extends ValidationAttribute
 {
+    protected BaseUnique $rule;
+
     public function __construct(
-        protected null|string|RouteParameterReference $table = null,
-        protected null|string|RouteParameterReference $column = 'NULL',
-        protected null|string|RouteParameterReference $connection = null,
-        protected null|string|RouteParameterReference $ignore = null,
-        protected null|string|RouteParameterReference $ignoreColumn = null,
-        protected bool|RouteParameterReference        $withoutTrashed = false,
-        protected string|RouteParameterReference      $deletedAtColumn = 'deleted_at',
-        protected ?Closure                            $where = null,
-        protected ?BaseUnique                         $rule = null
+        ?string $table = null,
+        ?string $column = 'NULL',
+        ?string $connection = null,
+        ?string $ignore = null,
+        ?string $ignoreColumn = null,
+        bool $withoutTrashed = false,
+        string $deletedAtColumn = 'deleted_at',
+        ?Closure $where = null,
+        ?BaseUnique $rule = null
     ) {
         if ($table === null && $rule === null) {
             throw new Exception('Could not create unique validation rule, either table or a rule is required');
         }
-    }
 
-    public function getRule(ValidationPath $path): object|string
-    {
-        if($this->rule) {
-            return $this->rule;
-        }
-
-        $table = $this->normalizePossibleRouteReferenceParameter($this->table);
-        $column = $this->normalizePossibleRouteReferenceParameter($this->column);
-        $connection = $this->normalizePossibleRouteReferenceParameter($this->connection);
-        $ignore = $this->normalizePossibleRouteReferenceParameter($this->ignore);
-        $ignoreColumn = $this->normalizePossibleRouteReferenceParameter($this->ignoreColumn);
-        $withoutTrashed = $this->normalizePossibleRouteReferenceParameter($this->withoutTrashed);
-        $deletedAtColumn = $this->normalizePossibleRouteReferenceParameter($this->deletedAtColumn);
-
-        $rule = new BaseUnique(
+        $rule ??= new BaseUnique(
             $connection ? "{$connection}.{$table}" : $table,
             $column
         );
@@ -55,11 +40,16 @@ class Unique extends ObjectValidationAttribute
             $rule->ignore($ignore, $ignoreColumn);
         }
 
-        if ($this->where) {
-            $rule->where($this->where);
+        if ($where) {
+            $rule->where($where);
         }
 
-        return $this->rule = $rule;
+        $this->rule = $rule;
+    }
+
+    public function getRules(): array
+    {
+        return [$this->rule];
     }
 
     public static function keyword(): string

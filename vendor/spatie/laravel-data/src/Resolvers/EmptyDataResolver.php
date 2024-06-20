@@ -2,11 +2,9 @@
 
 namespace Spatie\LaravelData\Resolvers;
 
-use Spatie\LaravelData\Concerns\EmptyData;
 use Spatie\LaravelData\Exceptions\DataPropertyCanOnlyHaveOneType;
 use Spatie\LaravelData\Support\DataConfig;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\Types\CombinationType;
 use Traversable;
 
 class EmptyDataResolver
@@ -19,9 +17,7 @@ class EmptyDataResolver
     {
         $dataClass = $this->dataConfig->getDataClass($class);
 
-        $payload = [];
-
-        foreach ($dataClass->properties as $property) {
+        return $dataClass->properties->reduce(function (array $payload, DataProperty $property) use ($extra) {
             $name = $property->outputMappedName ?? $property->name;
 
             if ($property->hasDefaultValue) {
@@ -29,41 +25,34 @@ class EmptyDataResolver
             } else {
                 $payload[$name] = $extra[$property->name] ?? $this->getValueForProperty($property);
             }
-        }
 
-        return $payload;
+            return $payload;
+        }, []);
     }
 
     protected function getValueForProperty(DataProperty $property): mixed
     {
-        $propertyType = $property->type;
-
-        if ($propertyType->isMixed) {
+        if ($property->type->isMixed) {
             return null;
         }
 
-        if ($propertyType->type instanceof CombinationType && count($propertyType->type->types) > 1) {
+        if ($property->type->count() > 1) {
             throw DataPropertyCanOnlyHaveOneType::create($property);
         }
 
-        if ($propertyType->type->acceptsType('array')) {
+        if ($property->type->acceptsType('array')) {
             return [];
         }
 
-        if ($propertyType->kind->isDataObject()
-            && $this->dataConfig->getDataClass($propertyType->dataClass)->emptyData
-        ) {
-            /** @var class-string<EmptyData> $dataClass */
-            $dataClass = $propertyType->dataClass;
-
-            return $dataClass::empty();
+        if ($property->type->isDataObject) {
+            return $property->type->dataClass::empty();
         }
 
-        if ($propertyType->kind->isDataCollectable()) {
+        if ($property->type->isDataCollectable) {
             return [];
         }
 
-        if ($propertyType->type->findAcceptedTypeForBaseType(Traversable::class) !== null) {
+        if ($property->type->findAcceptedTypeForBaseType(Traversable::class) !== null) {
             return [];
         }
 

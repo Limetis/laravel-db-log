@@ -13,9 +13,7 @@ class JsonNormalizer implements Normalizer
         }
 
         try {
-            $decoded = json_decode($value, associative: true, flags: JSON_THROW_ON_ERROR);
-
-            return is_array($decoded) ? $decoded : null;
+            return json_decode($value, associative: true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException) {
             return null;
         }

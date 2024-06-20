@@ -4,13 +4,11 @@ namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
 use DateTimeInterface;
-use Spatie\LaravelData\Support\Validation\References\FieldReference;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class After extends StringValidationAttribute
 {
-    public function __construct(protected string|DateTimeInterface|FieldReference|RouteParameterReference $date)
+    public function __construct(protected string|DateTimeInterface $date)
     {
     }
 
@@ -21,7 +19,7 @@ class After extends StringValidationAttribute
 
     public function parameters(): array
     {
-        return [$this->date];
+        return [$this->normalizeValue($this->date)];
     }
 
     public static function create(string ...$parameters): static

@@ -57,7 +57,7 @@ class NameMappersResolver
         return null;
     }
 
-    protected function resolveMapper(string|int|NameMapper $value): ?NameMapper
+    protected function resolveMapper(string|int $value): ?NameMapper
     {
         $mapper = $this->resolveMapperClass($value);
 
@@ -70,14 +70,10 @@ class NameMappersResolver
         return $mapper;
     }
 
-    protected function resolveMapperClass(int|string|NameMapper $value): NameMapper
+    protected function resolveMapperClass(int|string $value): NameMapper
     {
         if (is_int($value)) {
             return new ProvidedNameMapper($value);
-        }
-
-        if($value instanceof NameMapper) {
-            return $value;
         }
 
         if (is_a($value, NameMapper::class, true)) {

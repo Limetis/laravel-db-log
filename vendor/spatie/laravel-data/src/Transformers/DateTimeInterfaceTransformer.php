@@ -2,30 +2,27 @@
 
 namespace Spatie\LaravelData\Transformers;
 
-use DateTimeInterface;
 use DateTimeZone;
 use Illuminate\Support\Arr;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\Transformation\TransformationContext;
 
 class DateTimeInterfaceTransformer implements Transformer
 {
-    protected string $format;
-
     public function __construct(
-        ?string $format = null,
+        protected ?string $format = null,
         protected ?string $setTimeZone = null
     ) {
-        [$this->format] = Arr::wrap($format ?? config('data.date_format'));
     }
 
-    public function transform(DataProperty $property, mixed $value, TransformationContext $context): string
+    public function transform(DataProperty $property, mixed $value): string
     {
-        /** @var DateTimeInterface $value */
+        [$format] = Arr::wrap($this->format ?? config('data.date_format'));
+
+        /** @var \DateTimeInterface $value */
         if ($this->setTimeZone) {
             $value = (clone $value)->setTimezone(new DateTimeZone($this->setTimeZone));
         }
 
-        return $value->format(ltrim($this->format, '!'));
+        return $value->format($format);
     }
 }

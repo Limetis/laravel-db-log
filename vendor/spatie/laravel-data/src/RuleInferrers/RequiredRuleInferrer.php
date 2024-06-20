@@ -7,31 +7,27 @@ use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Present;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Support\DataProperty;
-use Spatie\LaravelData\Support\Validation\PropertyRules;
 use Spatie\LaravelData\Support\Validation\RequiringRule;
-use Spatie\LaravelData\Support\Validation\ValidationContext;
+use Spatie\LaravelData\Support\Validation\RulesCollection;
 
 class RequiredRuleInferrer implements RuleInferrer
 {
-    public function handle(
-        DataProperty $property,
-        PropertyRules $rules,
-        ValidationContext $context,
-    ): PropertyRules {
+    public function handle(DataProperty $property, RulesCollection $rules): RulesCollection
+    {
         if ($this->shouldAddRule($property, $rules)) {
-            $rules->prepend(new Required());
+            $rules->add(new Required());
         }
 
         return $rules;
     }
 
-    protected function shouldAddRule(DataProperty $property, PropertyRules $rules): bool
+    protected function shouldAddRule(DataProperty $property, RulesCollection $rules): bool
     {
         if ($property->type->isNullable || $property->type->isOptional) {
             return false;
         }
 
-        if ($property->type->kind->isDataCollectable() && $rules->hasType(Present::class)) {
+        if ($property->type->isDataCollectable && $rules->hasType(Present::class)) {
             return false;
         }
 

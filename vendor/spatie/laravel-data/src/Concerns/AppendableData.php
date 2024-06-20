@@ -6,7 +6,7 @@ use Closure;
 
 trait AppendableData
 {
-    protected array $_additional = [];
+    protected array $additional = [];
 
     public function with(): array
     {
@@ -15,7 +15,7 @@ trait AppendableData
 
     public function additional(array $additional): static
     {
-        $this->_additional = array_merge($this->_additional, $additional);
+        $this->additional = array_merge($this->additional, $additional);
 
         return $this;
     }
@@ -24,20 +24,12 @@ trait AppendableData
     {
         $additional = $this->with();
 
-        $computedAdditional = [];
-
-        foreach ($additional as $name => $value) {
-            $computedAdditional[$name] = $value instanceof Closure
+        foreach ($this->additional as $name => $value) {
+            $additional[$name] = $value instanceof Closure
                 ? ($value)($this)
                 : $value;
         }
 
-        foreach ($this->_additional as $name => $value) {
-            $computedAdditional[$name] = $value instanceof Closure
-                ? ($value)($this)
-                : $value;
-        }
-
-        return $computedAdditional;
+        return $additional;
     }
 }

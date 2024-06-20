@@ -3,12 +3,11 @@
 namespace Spatie\LaravelData\Attributes\Validation;
 
 use Attribute;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
-#[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class Min extends StringValidationAttribute
 {
-    public function __construct(protected int|RouteParameterReference $value)
+    public function __construct(protected int $value)
     {
     }
 

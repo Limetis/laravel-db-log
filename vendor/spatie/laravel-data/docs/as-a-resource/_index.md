@@ -1,5 +1,5 @@
 ---
 title: As a resource
 
-weight: 4
+weight: 3
 ---

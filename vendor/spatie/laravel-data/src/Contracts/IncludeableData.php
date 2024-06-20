@@ -3,9 +3,12 @@
 namespace Spatie\LaravelData\Contracts;
 
 use Closure;
+use Spatie\LaravelData\Support\PartialTrees;
 
-interface IncludeableData extends ContextableData
+interface IncludeableData
 {
+    public function withPartialTrees(PartialTrees $partialTrees): object;
+
     public function include(string ...$includes): object;
 
     public function exclude(string ...$excludes): object;
@@ -21,4 +24,6 @@ interface IncludeableData extends ContextableData
     public function onlyWhen(string $only, bool|Closure $condition): object;
 
     public function exceptWhen(string $except, bool|Closure $condition): object;
+
+    public function getPartialTrees(): PartialTrees;
 }
