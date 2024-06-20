@@ -1,0 +1,24 @@
+{
+    "name": "limetis/laravel-db-logger",
+    "description": "DB logger fo laravel",
+    "version": "0.0.1",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Laravel-DB-log\\LaravelDbLog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vaclav Gryc"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "monolog/monolog": "^3.0@dev",
+        "spatie/laravel-data": "dev-main",
+        "illuminate/database": "10.x-dev",
+        "illuminate/support": "10.x-dev"
+    }
+}
