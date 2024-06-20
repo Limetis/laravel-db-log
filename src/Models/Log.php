@@ -23,18 +23,12 @@ class Log extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'event',
-        'event_id',
-        'eshop_id',
         'request_id',
         'message',
-        'context',
         'payload',
         'level',
         'channel',
         'extra',
-        'remote_addr',
-        'user_agent',
     ];
 
     /**
@@ -46,6 +40,7 @@ class Log extends Model
         'payload' => 'array',
         'extra' => 'array',
     ];
+
 
     /**
      * The attributes that should be mutated to dates.

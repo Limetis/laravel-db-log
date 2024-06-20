@@ -1,7 +1,7 @@
 {
     "name": "limetis/laraveldblogger",
     "description": "DB logger fo laravel",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "type": "library",
     "license": "MIT",
     "autoload": {

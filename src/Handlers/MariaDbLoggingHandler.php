@@ -16,20 +16,15 @@ class MariaDbLoggingHandler extends AbstractProcessingHandler
 
     protected function write(LogRecord $record): void
     {
-        if (isset($record->context['requestId'])) {
-            $requestId = $record->context['requestId'];
-                $logData = [
-                  'requestId' => $requestId,
-                  'message' => $record->message,
-                  //'payload' => context['payload'] ?? [],
-                  'level' => $record->level->name,
-                  'channel' => $record->channel,
-                  'extra' => $record->extra ?? [],
-                ];
-       
-                \Limetis\laraveldblogger\Models\Log::query()->create($logData);
-        } else {
-            Log::warning('RequestId is not set in context');
-        }
+        $requestId = $record->context['requestId'] ?? null;
+            $logData = [
+              'request_id' => $requestId,
+              'message' => $record->message,
+              //'payload' => context['payload'] ?? [],
+              'level' => $record->level->name,
+              'channel' => $record->channel,
+              'extra' => $record->extra ?? [],
+            ];
+            \Limetis\laraveldblogger\Models\Log::query()->create($logData);
     }
 }

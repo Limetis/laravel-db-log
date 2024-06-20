@@ -13,18 +13,12 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('event')->index();
-            $table->string('event_id')->index();
-            $table->string('eshop_id')->index();
-            $table->string('request_id')->index();
+            $table->string('request_id')->nullable();
             $table->longText('message');
-            $table->longText('context')->nullable();
             $table->longText('payload')->nullable();
             $table->string('level');
             $table->string('channel');
             $table->longText('extra')->nullable();
-            $table->string('remote_addr')->nullable();
-            $table->string('user_agent')->nullable();
             $table->timestamps();
         });
     }
