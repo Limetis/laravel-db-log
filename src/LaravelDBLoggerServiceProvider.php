@@ -3,12 +3,15 @@
 namespace Limetis\LaravelDBLogger;
 
 use Illuminate\Support\ServiceProvider;
+use Limetis\LaravelDBLogger\Loggers\MariaDbLogger;
 
 class LaravelDBLoggerServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // Registrace balíčku
+        $this->app->singleton('MariaDbLogger', function ($app) {
+            return new MariaDbLogger();
+        });
     }
 
     public function boot()
