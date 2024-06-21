@@ -20,7 +20,7 @@ class MariaDbLoggingHandler extends AbstractProcessingHandler
             $logData = [
               'request_id' => $requestId,
               'message' => $record->message,
-              //'payload' => context['payload'] ?? [],
+              'payload' => $record->context['payload'] ?? [],
               'level' => $record->level->name,
               'channel' => $record->channel,
               'extra' => $record->extra ?? [],
